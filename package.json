@@ -1,5 +1,5 @@
 {
-  "name": "nestjs-template",
+  "name": "factorial-coding-challenge",
   "version": "0.0.1",
   "description": "",
   "author": "",
@@ -25,11 +25,6 @@
     "test:integration": "npm run jest -- --selectProjects integration",
     "test:eslint": "NODE_OPTIONS=\"SNODE_OPTIONS --experimental-vm-modules\" npm run jest -- --selectProjects eslint",
     "jest": "LOG_LEVEL=silent node --expose-gc --max-old-space-size=4096 ./node_modules/.bin/jest --forceExit --logHeapUsage",
-    "test:ci": "npm run test:unit:ci && npm run test:integration:ci",
-    "test:unit:ci": "npm run jest:ci -- --selectProjects unit -maxWorkers=6",
-    "test:integration:ci": "npm run jest:ci -- --selectProjects integration -maxWorkers=6",
-    "jest:ci": "LOG_LEVEL=silent node --expose-gc --max-old-space-size=4096 ./node_modules/.bin/jest --ci --silent --forceExit --logHeapUsage",
-    "swagger:generate": "nest start --entryFile src/common/swagger/scripts/generate-swagger.js && prettier --write specs/hr-suite.json",
     "migration:generate": "npx ts-node -P ./tsconfig.json -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:generate -d ./src/typeorm.config.ts ./migrations/migration",
     "migration:create": "npx ts-node -P ./tsconfig.json -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:create -d ./src/typeorm.config.ts ./migrations/migration",
     "migration:run": "npx ts-node -P ./tsconfig.json -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:run -d ./src/typeorm.config.ts",
