@@ -2,12 +2,15 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Logger, LoggerModule } from 'nestjs-pino';
 import { createUUID } from '@Common/utils/create-uuid';
-import { APP_PIPE } from '@nestjs/core';
+import { APP_GUARD, APP_PIPE } from '@nestjs/core';
 import { ZodValidationPipe } from 'nestjs-zod';
+import { AuthModule } from '@Auth/auth.module';
+import { JwtGuard } from '@Auth/guards/jwt.guard';
 import { typeOrmModule } from './typeorm.module';
 
 @Module({
   imports: [
+    AuthModule,
     typeOrmModule,
     ConfigModule.forRoot({ isGlobal: true }),
     LoggerModule.forRootAsync({
@@ -29,6 +32,11 @@ import { typeOrmModule } from './typeorm.module';
       provide: APP_PIPE,
       useClass: ZodValidationPipe,
     },
+    {
+      provide: APP_GUARD,
+      useExisting: JwtGuard,
+    },
+    JwtGuard,
     Logger,
   ],
 })
