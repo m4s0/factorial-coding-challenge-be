@@ -58,7 +58,10 @@ describe('AuthService', () => {
       expect(result).toMatchObject({ accessToken: 'access_token' });
       expect(jwtService.sign).toHaveBeenCalledWith({
         id: user.id,
-        email: user.email,
+        isAdmin: false,
+        username: user.username,
+        firstName: user.firstName,
+        lastName: user.lastName,
       });
     });
 

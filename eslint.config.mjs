@@ -42,6 +42,9 @@ export default tsEslint.config(
       'class-methods-use-this': 'off',
       'no-useless-constructor': 'off',
       'no-empty-function': 'off',
+      'no-await-in-loop': 'off',
+      "no-restricted-syntax": ["error", "ForInStatement", "LabeledStatement", "WithStatement"],
+      'no-case-declarations': 'off',
       'import/no-extraneous-dependencies': 'off',
       'import/no-unresolved': 'off',
       'import/extensions': 'off',
@@ -56,6 +59,12 @@ export default tsEslint.config(
     rules: {
       'jest/expect-expect': 'off',
       '@typescript-eslint/no-unsafe-assignment': 'off',
+    },
+  },
+  {
+    files: ['**/seed.ts'],
+    rules: {
+      '@typescript-eslint/no-unused-vars': 'off',
     },
   },
 );

@@ -14,7 +14,7 @@ export class UserRepository {
     return this.profileRepository.findOneBy({ id: userId });
   }
 
-  async findOneByEmail(email: string) {
+  async findOneByEmail(email: string): Promise<User | null> {
     return this.profileRepository.findOneBy({ email });
   }
 

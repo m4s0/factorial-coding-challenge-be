@@ -26,6 +26,7 @@
     "paths": {
       "@Common/*": ["./src/common/*"],
       "@Auth/*": ["./src/auth/*"],
+      "@Shop/*": ["./src/shop/*"],
       "@User/*": ["./src/users/*"]
     },
     "resolveJsonModule": true,

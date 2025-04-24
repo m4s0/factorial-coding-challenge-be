@@ -14,7 +14,7 @@
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "dev": "nest start watch | pino-pretty",
-    "dev:debug": "nest start watch -debug | pino-pretty",
+    "dev:debug": "nest start watch --debug | pino-pretty",
     "lint": "npm run prettier && npm run eslint",
     "eslint": "eslint \"{src,test,migrations}/**/*.ts\"",
     "eslint:fix": "npm run eslint -- --fix",
@@ -29,6 +29,7 @@
     "migration:create": "npx ts-node -P ./tsconfig.json -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:create -d ./src/typeorm.config.ts ./migrations/migration",
     "migration:run": "npx ts-node -P ./tsconfig.json -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:run -d ./src/typeorm.config.ts",
     "migration:revert": "npx ts-node -P ./tsconfig.json -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:revert -d ./src/typeorm.config.ts",
+    "seed": "ts-node src/scripts/seed.ts",
     "prepare": "husky"
   },
   "lint-staged": {
@@ -83,8 +84,8 @@
     "husky": "^9.1.7",
     "jest": "^29.7.0",
     "lint-staged": "^15.5.0",
-    "prettier": "^3.4.2",
     "pino-pretty": "^13.0.0",
+    "prettier": "^3.4.2",
     "source-map-support": "^0.5.21",
     "supertest": "^7.0.0",
     "ts-jest": "^29.2.5",

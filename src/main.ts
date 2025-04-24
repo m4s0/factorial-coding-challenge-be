@@ -18,6 +18,8 @@ async function bootstrap() {
   addFilters(app);
 
   app.use(helmet());
+  app.enableCors();
+
   await app.listen(port);
 
   const logger = app.get<Logger>(Logger);
