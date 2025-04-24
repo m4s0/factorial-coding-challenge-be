@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectEntityManager } from '@nestjs/typeorm';
 import { EntityManager } from 'typeorm';
-import { User } from '../entities/user.entity';
+import { RegisterInput } from '@Auth/types/register.input';
+import { LogicException } from '@Common/exceptions/logic-exception';
+import { hashPassword } from '@Auth/utils/hash-password';
 import { UserRepository } from '../repositories/user.repository';
-import { RegisterInput } from '../../auth/types/register.input';
-import { LogicException } from '../../common/exceptions/logic-exception';
-import { hashPassword } from '../../auth/utils/hash-password';
+import { User } from '../entities/user.entity';
 
 @Injectable()
 export class UsersService {
@@ -30,5 +30,9 @@ export class UsersService {
       firstName: input.firstName,
       lastName: input.lastName,
     });
+  }
+
+  async findById(userId: string): Promise<User | null> {
+    return this.userRepository.findOneById(userId);
   }
 }

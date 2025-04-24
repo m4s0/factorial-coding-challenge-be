@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`transformInventoryItem should transform inventory item with all fields correctly 1`] = `
+{
+  "createdAt": "2024-01-01T00:00:00.000Z",
+  "id": "inv_1",
+  "outOfStock": false,
+  "productOptionId": "opt_1",
+  "quantity": 100,
+  "updatedAt": "2024-01-02T00:00:00.000Z",
+}
+`;
+
+exports[`transformInventoryItem should transform inventory item with zero quantity and out of stock 1`] = `
+{
+  "createdAt": "2024-01-01T00:00:00.000Z",
+  "id": "inv_2",
+  "outOfStock": true,
+  "productOptionId": "opt_2",
+  "quantity": 0,
+  "updatedAt": "2024-01-02T00:00:00.000Z",
+}
+`;

@@ -1,0 +1,47 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`transformOptionGroup should transform cart correctly 1`] = `
+{
+  "createdAt": "2024-03-15T10:00:00.000Z",
+  "id": "1fd7b09c-6da1-4f84-afe5-9ab0117c4cab",
+  "items": [
+    {
+      "createdAt": "2024-03-15T10:00:00.000Z",
+      "id": "a87f1507-55f5-41e1-b66e-34b245dd3e00",
+      "itemOptions": [
+        {
+          "createdAt": "2024-03-15T10:00:00.000Z",
+          "id": "1db5f36b-d590-4334-83db-0004701f8965",
+          "option": {
+            "createdAt": "2024-03-15T10:00:00.000Z",
+            "displayName": "Matte",
+            "id": "195aa790-a520-444b-95c2-f6c5f4cf63b1",
+            "name": "matte",
+            "optionGroupId": "a95635bd-fd69-44b7-8f63-cab9fbaacbf1",
+            "price": 35,
+            "updatedAt": "2024-03-15T10:00:00.000Z",
+          },
+          "optionId": "195aa790-a520-444b-95c2-f6c5f4cf63b1",
+          "updatedAt": "2024-03-15T10:00:00.000Z",
+        },
+      ],
+      "price": 835,
+      "product": {
+        "categoryId": "3fee385c-8b66-4571-9d24-4c18e9223515",
+        "createdAt": "2024-03-15T10:00:00.000Z",
+        "description": "High-performance mountain bike for serious trail riders",
+        "id": "09e51e85-e64e-4b40-a5d5-d791dfdcdd2a",
+        "name": "Trailblazer Pro",
+        "price": 800,
+        "updatedAt": "2024-03-15T10:00:00.000Z",
+      },
+      "productId": "09e51e85-e64e-4b40-a5d5-d791dfdcdd2a",
+      "quantity": 1,
+      "totalPrice": 835,
+      "updatedAt": "2024-03-15T10:00:00.000Z",
+    },
+  ],
+  "totalPrice": 835,
+  "updatedAt": "2024-03-15T10:00:00.000Z",
+}
+`;

@@ -1,0 +1,42 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`transformProduct should transform a complete product with category and option groups 1`] = `
+{
+  "basePrice": 99.99,
+  "category": {
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "description": "Test Description",
+    "id": "8f7e9d2c-3b4a-5c6d-7e8f-9a0b1c2d3e4f",
+    "isActive": true,
+    "name": "Test Category",
+    "updatedAt": "2024-01-01T00:00:00.000Z",
+  },
+  "categoryId": "8f7e9d2c-3b4a-5c6d-7e8f-9a0b1c2d3e4f",
+  "createdAt": "2024-01-01T00:00:00.000Z",
+  "description": "Test Description",
+  "id": "d17fac76-f22a-43cb-9336-b91b3e0c2aca",
+  "isActive": true,
+  "name": "Test Product",
+  "optionGroups": [
+    {
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "displayName": "Test Option Group",
+      "id": "a1b2c3d4-e5f6-7g8h-9i0j-k1l2m3n4o5p6",
+      "name": "Test Option Group",
+      "options": [],
+      "product": {
+        "basePrice": 99.99,
+        "categoryId": undefined,
+        "createdAt": "2024-01-01T00:00:00.000Z",
+        "description": "Test Description",
+        "id": "d17fac76-f22a-43cb-9336-b91b3e0c2aca",
+        "isActive": true,
+        "name": "Test Product",
+        "updatedAt": "2024-01-01T00:00:00.000Z",
+      },
+      "updatedAt": "2024-01-01T00:00:00.000Z",
+    },
+  ],
+  "updatedAt": "2024-01-01T00:00:00.000Z",
+}
+`;

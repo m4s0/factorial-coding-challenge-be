@@ -4,6 +4,7 @@ import { UsersService } from '@User/services/users.service';
 import { User } from '@User/entities/user.entity';
 import { UserRepository } from '@User/repositories/user.repository';
 import { LogicException } from '@Common/exceptions/logic-exception';
+import { UserRole } from '@User/entities/user-role';
 import { RegisterInput } from '../types/register.input';
 import { LoginInput } from '../types/login.input';
 import { AccessTokenOutput } from '../types/access-token.output';
@@ -32,7 +33,10 @@ export class AuthService {
 
     const accessToken = this.jwtService.sign({
       id: user.id,
-      email: user.email,
+      isAdmin: user.roles.includes(UserRole.ADMIN),
+      username: user.username,
+      firstName: user.firstName,
+      lastName: user.lastName,
     });
 
     return { accessToken };

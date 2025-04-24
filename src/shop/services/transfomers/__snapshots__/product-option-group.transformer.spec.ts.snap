@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`transformOptionGroup should transform product option group correctly 1`] = `
+{
+  "createdAt": "2024-01-01T00:00:00.000Z",
+  "displayName": "Select Size",
+  "id": "123",
+  "name": "Size",
+  "options": [],
+  "updatedAt": "2024-01-01T00:00:00.000Z",
+}
+`;

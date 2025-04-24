@@ -4,13 +4,15 @@ import { Logger, LoggerModule } from 'nestjs-pino';
 import { createUUID } from '@Common/utils/create-uuid';
 import { APP_GUARD, APP_PIPE } from '@nestjs/core';
 import { ZodValidationPipe } from 'nestjs-zod';
-import { AuthModule } from '@Auth/auth.module';
 import { JwtGuard } from '@Auth/guards/jwt.guard';
+import { AuthModule } from '@Auth/auth.module';
+import { ShopModule } from '@Shop/shop.module';
 import { typeOrmModule } from './typeorm.module';
 
 @Module({
   imports: [
     AuthModule,
+    ShopModule,
     typeOrmModule,
     ConfigModule.forRoot({ isGlobal: true }),
     LoggerModule.forRootAsync({

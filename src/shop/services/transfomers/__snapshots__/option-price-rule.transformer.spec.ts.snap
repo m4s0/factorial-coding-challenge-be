@@ -1,0 +1,67 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`transformOptionPriceRule should transform option price rule with all fields correctly 1`] = `
+{
+  "createdAt": "2024-01-01T00:00:00.000Z",
+  "dependentOptionId": "opt_2",
+  "id": "price_1",
+  "isActive": true,
+  "price": 29.99,
+  "targetOption": {
+    "basePrice": 19.99,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "displayName": "Product Color",
+    "id": "opt_1",
+    "inventoryItems": [],
+    "isActive": true,
+    "name": "Color",
+    "optionGroup": {
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "displayName": "Sizes",
+      "id": "group123",
+      "name": "Sizes",
+      "options": [],
+      "product": {
+        "basePrice": 99.99,
+        "categoryId": undefined,
+        "createdAt": "2024-01-01T00:00:00.000Z",
+        "description": "Test Description",
+        "id": "d17fac76-f22a-43cb-9336-b91b3e0c2aca",
+        "isActive": true,
+        "name": "Test Product",
+        "updatedAt": "2024-01-01T00:00:00.000Z",
+      },
+      "updatedAt": "2024-01-02T00:00:00.000Z",
+    },
+    "optionGroupId": "group_1",
+    "priceRules": [],
+    "rulesAsCondition": [],
+    "rulesAsResult": [],
+    "updatedAt": "2024-01-02T00:00:00.000Z",
+  },
+  "targetOptionId": "opt_1",
+  "updatedAt": "2024-01-02T00:00:00.000Z",
+}
+`;
+
+exports[`transformOptionPriceRule should transform option price rule with minimal fields correctly 1`] = `
+{
+  "createdAt": "2024-01-01T00:00:00.000Z",
+  "dependentOptionId": "opt_2",
+  "id": "price_1",
+  "isActive": true,
+  "price": 29.99,
+  "targetOption": {
+    "basePrice": null,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "displayName": undefined,
+    "id": "opt_1",
+    "isActive": true,
+    "name": "Color",
+    "optionGroupId": "group_1",
+    "updatedAt": "2024-01-02T00:00:00.000Z",
+  },
+  "targetOptionId": "opt_1",
+  "updatedAt": "2024-01-02T00:00:00.000Z",
+}
+`;

@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`transformProductCategory should transform product category correctly 1`] = `
+{
+  "createdAt": "2024-01-01T00:00:00.000Z",
+  "description": "Electronic devices and accessories",
+  "id": "123",
+  "isActive": true,
+  "name": "Electronics",
+  "updatedAt": "2024-01-01T00:00:00.000Z",
+}
+`;
