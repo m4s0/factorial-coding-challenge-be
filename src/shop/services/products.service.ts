@@ -16,7 +16,6 @@ import { OptionPriceRuleRepository } from '@Shop/repositories/option-price-rule.
 import { ProductOptionGroupsService } from '@Shop/services/product-option-groups.service';
 import { Product } from '../entities/product.entity';
 import { OptionRulesService } from './option-rules.service';
-import { InventoryService } from './inventory.service';
 import { PricingService } from './pricing.service';
 import { CreateProductInput } from '../types/create-product.input';
 
@@ -31,12 +30,11 @@ export class ProductsService {
     private readonly optionPriceRuleRepository: OptionPriceRuleRepository,
     private readonly productOptionGroupsService: ProductOptionGroupsService,
     private readonly optionRulesService: OptionRulesService,
-    private readonly inventoryService: InventoryService,
     private readonly pricingService: PricingService,
   ) {}
 
-  async getAll(categoryName?: string): Promise<Product[]> {
-    return this.productRepository.findAll(categoryName);
+  async getAll(): Promise<Product[]> {
+    return this.productRepository.findAll();
   }
 
   async getById(id: string): Promise<Product> {
@@ -53,7 +51,7 @@ export class ProductsService {
     const product = await this.getById(id);
 
     const selectedProductOptions =
-      await this.productOptionRepository.findOptionsByIds(optionIds);
+      await this.productOptionRepository.findAllByIds(optionIds);
 
     if (selectedProductOptions.length === 0) {
       return product;
@@ -93,17 +91,9 @@ export class ProductsService {
     const optionGroups =
       await this.productOptionGroupsService.findOptionGroupsByProductId(id);
 
-    const optionInventory =
-      await this.inventoryService.getInventoryStatusForProduct(id);
+    const rules = await this.optionRulesService.getRulesByProductId(id);
 
-    const rules = await this.optionRulesService.findRulesByProductId(id);
-
-    return transformProductConfiguration(
-      existingProduct,
-      optionGroups,
-      optionInventory,
-      rules,
-    );
+    return transformProductConfiguration(existingProduct, optionGroups, rules);
   }
 
   async create(input: CreateProductInput): Promise<Product> {

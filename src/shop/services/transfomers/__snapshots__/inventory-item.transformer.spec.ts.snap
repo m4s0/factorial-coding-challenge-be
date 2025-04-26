@@ -3,9 +3,51 @@
 exports[`transformInventoryItem should transform inventory item with all fields correctly 1`] = `
 {
   "createdAt": "2024-01-01T00:00:00.000Z",
-  "id": "inv_1",
+  "id": "755cf8ae-950c-4be2-9a20-1fb6576b745e",
   "outOfStock": false,
-  "productOptionId": "opt_1",
+  "productOption": {
+    "basePrice": 10.99,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "displayName": "Product Size",
+    "id": "fb5d0e88-8014-4883-82d5-94d0af8e723f",
+    "isActive": true,
+    "name": "Size",
+    "priceRules": [
+      {
+        "createdAt": "2024-01-01T00:00:00.000Z",
+        "dependentOptionId": "a2444f70-749c-41e8-bdc3-2de2348afeb0",
+        "id": "2b6c2ef0-776e-4e55-b3ad-7059539150ce",
+        "isActive": true,
+        "price": 5,
+        "targetOptionId": "fb5d0e88-8014-4883-82d5-94d0af8e723f",
+        "updatedAt": "2024-01-02T00:00:00.000Z",
+      },
+    ],
+    "rulesAsCondition": [
+      {
+        "createdAt": "2024-01-01T00:00:00.000Z",
+        "id": "13585532-a295-4a82-b7bf-0abc07064ee9",
+        "ifOptionId": "a8f340f5-f724-43f8-b0c8-c43c29220923",
+        "isActive": true,
+        "ruleType": "requires",
+        "thenOptionId": "31b7d272-3664-4a7f-87f7-09d95c60dfac",
+        "updatedAt": "2024-01-02T00:00:00.000Z",
+      },
+    ],
+    "rulesAsResult": [
+      {
+        "createdAt": "2024-01-01T00:00:00.000Z",
+        "id": "d8cb0d41-f2bf-40ec-8f0d-24316c9eb94b",
+        "ifOptionId": "ec428b31-7b25-472f-813f-ff05022f580e",
+        "isActive": true,
+        "ruleType": "requires",
+        "thenOptionId": "4f0bbaec-fe89-43d6-ac39-9fa215bd3bbd",
+        "updatedAt": "2024-01-02T00:00:00.000Z",
+      },
+    ],
+    "updatedAt": "2024-01-02T00:00:00.000Z",
+  },
+  "productOptionId": "13585532-a295-4a82-b7bf-0abc07064ee9",
   "quantity": 100,
   "updatedAt": "2024-01-02T00:00:00.000Z",
 }
@@ -14,9 +56,9 @@ exports[`transformInventoryItem should transform inventory item with all fields 
 exports[`transformInventoryItem should transform inventory item with zero quantity and out of stock 1`] = `
 {
   "createdAt": "2024-01-01T00:00:00.000Z",
-  "id": "inv_2",
+  "id": "a8f340f5-f724-43f8-b0c8-c43c29220923",
   "outOfStock": true,
-  "productOptionId": "opt_2",
+  "productOptionId": "4636127e-769e-4136-9a6a-8fddb7ca9692",
   "quantity": 0,
   "updatedAt": "2024-01-02T00:00:00.000Z",
 }

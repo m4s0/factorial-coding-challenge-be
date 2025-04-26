@@ -10,6 +10,20 @@ export class OptionRuleRepository {
     private optionRuleRepository: Repository<OptionRule>,
   ) {}
 
+  async findAll(): Promise<OptionRule[]> {
+    return this.optionRuleRepository.find({
+      relations: ['ifOption', 'thenOption'],
+      order: { createdAt: 'DESC' },
+    });
+  }
+
+  async findOneById(id: string): Promise<OptionRule | null> {
+    return this.optionRuleRepository.findOne({
+      where: { id },
+      relations: ['ifOption', 'thenOption'],
+    });
+  }
+
   async findOptionRuleByOptionsIds(optionIds: string[]): Promise<OptionRule[]> {
     return this.optionRuleRepository
       .createQueryBuilder('rule')

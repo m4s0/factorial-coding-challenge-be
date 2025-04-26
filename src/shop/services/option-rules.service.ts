@@ -1,11 +1,16 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectEntityManager } from '@nestjs/typeorm';
 import { EntityManager } from 'typeorm';
 import { ProductOptionRepository } from '@Shop/repositories/product-option.repository';
 import { OptionRuleRepository } from '@Shop/repositories/option-rule.repository';
 import { isRuleValid } from '@Shop/utils/is-rule-valid';
+import { CreateOptionRuleInput } from '@Shop/types/create-option-rule.input';
+import { UpdateOptionRuleInput } from '@Shop/types/update-option-rule.input';
 import { OptionRule } from '../entities/option-rule.entity';
-import { RuleType } from '../entities/rule-type';
 
 @Injectable()
 export class OptionRulesService {
@@ -16,27 +21,46 @@ export class OptionRulesService {
     private readonly productOptionRepository: ProductOptionRepository,
   ) {}
 
-  async createRule(
-    ifOptionId: string,
-    thenOptionId: string,
-    ruleType: RuleType,
-  ): Promise<OptionRule> {
-    const rule = this.entityManager.create(OptionRule, {
-      ifOptionId,
-      thenOptionId,
-      ruleType,
-    });
-
-    return this.entityManager.save(rule);
+  async getAll(): Promise<OptionRule[]> {
+    return this.optionRuleRepository.findAll();
   }
 
-  async findRulesByProductId(productId: string): Promise<OptionRule[]> {
-    const options =
-      await this.productOptionRepository.findOptionsByProductId(productId);
+  async getById(id: string): Promise<OptionRule> {
+    const optionsRule = await this.optionRuleRepository.findOneById(id);
 
-    const optionIds = options.map((option) => option.id);
+    if (!optionsRule) {
+      throw new NotFoundException(`OptionRule with ID ${id} not found`);
+    }
+
+    return optionsRule;
+  }
+
+  async getRulesByProductId(productId: string): Promise<OptionRule[]> {
+    const optionRules =
+      await this.productOptionRepository.findAllByProductId(productId);
+
+    const optionIds = optionRules.map((option) => option.id);
 
     return this.optionRuleRepository.findOptionRuleByOptionsIds(optionIds);
+  }
+
+  async create(input: CreateOptionRuleInput): Promise<OptionRule> {
+    const optionRule = this.entityManager.create(OptionRule, input);
+
+    return this.entityManager.save(optionRule);
+  }
+
+  async update(id: string, input: UpdateOptionRuleInput): Promise<OptionRule> {
+    const existingOptionRule = await this.getById(id);
+
+    this.entityManager.merge(OptionRule, existingOptionRule, input);
+    return this.entityManager.save(existingOptionRule);
+  }
+
+  async remove(id: string) {
+    const existingOptionRule = await this.getById(id);
+
+    await this.entityManager.remove(existingOptionRule);
   }
 
   async validateConfiguration(
@@ -49,14 +73,13 @@ export class OptionRulesService {
       );
     }
 
-    const options =
-      await this.productOptionRepository.findOptionsByIds(optionIds);
+    const options = await this.productOptionRepository.findAllByIds(optionIds);
 
-    const rules =
+    const optionRules =
       await this.optionRuleRepository.findOptionRuleByOptionsIds(optionIds);
 
-    for (const rule of rules) {
-      if (!isRuleValid(rule, options)) {
+    for (const optionRule of optionRules) {
+      if (!isRuleValid(optionRule, options)) {
         return false;
       }
     }

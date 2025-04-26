@@ -14,6 +14,7 @@ export class ProductOptionGroupRepository {
     const queryBuilder = this.productOptionGroupRepository
       .createQueryBuilder('optionGroup')
       .innerJoinAndSelect('optionGroup.product', 'product')
+      .innerJoinAndSelect('optionGroup.options', 'options')
       .orderBy('optionGroup.createdAt', 'DESC');
 
     if (isActive !== undefined) {

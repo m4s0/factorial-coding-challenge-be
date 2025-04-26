@@ -28,7 +28,7 @@ export class ProductOptionsService {
   }
 
   async findOptionsByGroupId(groupId: string): Promise<ProductOption[]> {
-    return this.productOptionRepository.findOptionsByGroupId(groupId);
+    return this.productOptionRepository.findAllByGroupId(groupId);
   }
 
   async create(input: CreateProductOptionInput): Promise<ProductOption> {

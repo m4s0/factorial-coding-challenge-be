@@ -3,7 +3,7 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
-  ManyToOne,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -20,9 +20,13 @@ export class InventoryItem {
   @Column({ default: false })
   declare outOfStock: boolean;
 
-  @ManyToOne(() => ProductOption, (option) => option.inventoryItems, {
-    onDelete: 'CASCADE',
-  })
+  @OneToOne(
+    () => ProductOption,
+    (productOption) => productOption.inventoryItem,
+    {
+      onDelete: 'CASCADE',
+    },
+  )
   @JoinColumn()
   declare productOption: ProductOption;
 

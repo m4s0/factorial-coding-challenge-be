@@ -20,15 +20,6 @@ import { UpdateProductOptionDto } from '../dtos/update-product-option.dto';
 export class ProductOptionController {
   constructor(private readonly productOptionsService: ProductOptionsService) {}
 
-  @Get(':optionId')
-  async getById(
-    @Param('optionId', ParseUUIDPipe) optionId: string,
-  ): Promise<ProductOptionOutput> {
-    const productOption = await this.productOptionsService.getById(optionId);
-
-    return transformProductOption(productOption);
-  }
-
   @Get()
   async getAll(): Promise<ProductOptionOutput[]> {
     const productOptions = await this.productOptionsService.getAll();
@@ -36,6 +27,15 @@ export class ProductOptionController {
     return productOptions.map((productOption) =>
       transformProductOption(productOption),
     );
+  }
+
+  @Get(':optionId')
+  async getById(
+    @Param('optionId', ParseUUIDPipe) optionId: string,
+  ): Promise<ProductOptionOutput> {
+    const productOption = await this.productOptionsService.getById(optionId);
+
+    return transformProductOption(productOption);
   }
 
   @Post()

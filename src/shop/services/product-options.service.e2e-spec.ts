@@ -8,6 +8,7 @@ import { createProduct } from '../../../test/helpers/create-product';
 import { createProductOptionGroup } from '../../../test/helpers/create-product-option-group';
 import { createProductOption } from '../../../test/helpers/create-product-option';
 import { createProductCategory } from '../../../test/helpers/create-product-category';
+import { createInventoryItem } from '../../../test/helpers/create-inventory-item';
 
 describe('ProductOptionsService', () => {
   let app: INestApplication;
@@ -79,6 +80,11 @@ describe('ProductOptionsService', () => {
         entityManager,
         optionGroup,
       );
+      const inventoryItem = await createInventoryItem(entityManager, {
+        productOptionId: productOption.id,
+        quantity: 10,
+        outOfStock: false,
+      });
 
       const results = await productOptionsService.getAll();
 
@@ -99,6 +105,14 @@ describe('ProductOptionsService', () => {
           productId: product.id,
           createdAt: optionGroup.createdAt,
           updatedAt: optionGroup.updatedAt,
+        },
+        inventoryItem: {
+          id: inventoryItem.id,
+          quantity: inventoryItem.quantity,
+          outOfStock: inventoryItem.outOfStock,
+          productOptionId: inventoryItem.productOptionId,
+          createdAt: inventoryItem.createdAt,
+          updatedAt: inventoryItem.updatedAt,
         },
       });
     });

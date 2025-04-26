@@ -3,6 +3,8 @@ import request from 'supertest';
 import { App } from 'supertest/types';
 import { ProductOptionGroup } from '@Shop/entities/product-option-group.entity';
 import { ProductOptionGroupsService } from '@Shop/services/product-option-groups.service';
+import { Product } from '@Shop/entities/product.entity';
+import { ProductOption } from '@Shop/entities/product-option.entity';
 import { createTestApp } from '../../../test/create-test.app';
 
 describe('ProductOptionGroupController', () => {
@@ -26,11 +28,21 @@ describe('ProductOptionGroupController', () => {
       jest
         .spyOn(ProductOptionGroupsService.prototype, 'getById')
         .mockResolvedValue({
-          id: '814c6b60-2965-4464-abed-1587b4668e1e',
+          id: 'a2444f70-749c-41e8-bdc3-2de2348afeb0',
           name: 'Size',
-          displayName: 'Size',
+          displayName: 'Select Size',
+          product: {
+            id: 'd17fac76-f22a-43cb-9336-b91b3e0c2aca',
+            name: 'Test Product',
+            description: 'Test Description',
+            basePrice: 99.99,
+            isActive: true,
+            createdAt: new Date('2024-01-01'),
+            updatedAt: new Date('2024-01-01'),
+          } as Product,
+          options: [] as ProductOption[],
           createdAt: new Date('2024-01-01'),
-          updatedAt: new Date('2024-01-02'),
+          updatedAt: new Date('2024-01-01'),
         } as ProductOptionGroup);
 
       const groupId = 'bb88c5fd-e2fb-4d9a-9dd0-4a0f69228c62';
@@ -39,12 +51,22 @@ describe('ProductOptionGroupController', () => {
       );
 
       expect(response.statusCode).toBe(HttpStatus.OK);
-      expect(response.body).toEqual({
-        id: '814c6b60-2965-4464-abed-1587b4668e1e',
+      expect(response.body).toMatchObject({
+        id: 'a2444f70-749c-41e8-bdc3-2de2348afeb0',
         name: 'Size',
-        displayName: 'Size',
+        displayName: 'Select Size',
+        options: [],
+        product: {
+          id: 'd17fac76-f22a-43cb-9336-b91b3e0c2aca',
+          name: 'Test Product',
+          description: 'Test Description',
+          basePrice: 99.99,
+          isActive: true,
+          createdAt: '2024-01-01T00:00:00.000Z',
+          updatedAt: '2024-01-01T00:00:00.000Z',
+        },
         createdAt: '2024-01-01T00:00:00.000Z',
-        updatedAt: '2024-01-02T00:00:00.000Z',
+        updatedAt: '2024-01-01T00:00:00.000Z',
       });
       expect(productOptionGroupsService.getById).toHaveBeenCalledWith(groupId);
     });
@@ -64,12 +86,22 @@ describe('ProductOptionGroupController', () => {
         .spyOn(ProductOptionGroupsService.prototype, 'getAll')
         .mockResolvedValue([
           {
-            id: '814c6b60-2965-4464-abed-1587b4668e1e',
+            id: 'a2444f70-749c-41e8-bdc3-2de2348afeb0',
             name: 'Size',
-            displayName: 'Size',
+            displayName: 'Select Size',
+            product: {
+              id: 'd17fac76-f22a-43cb-9336-b91b3e0c2aca',
+              name: 'Test Product',
+              description: 'Test Description',
+              basePrice: 99.99,
+              isActive: true,
+              createdAt: new Date('2024-01-01'),
+              updatedAt: new Date('2024-01-01'),
+            } as Product,
+            options: [] as ProductOption[],
             createdAt: new Date('2024-01-01'),
-            updatedAt: new Date('2024-01-02'),
-          },
+            updatedAt: new Date('2024-01-01'),
+          } as ProductOptionGroup,
         ] as ProductOptionGroup[]);
 
       const response = await request(app.getHttpServer()).get(
@@ -77,13 +109,23 @@ describe('ProductOptionGroupController', () => {
       );
 
       expect(response.statusCode).toBe(HttpStatus.OK);
-      expect(response.body).toEqual([
+      expect(response.body).toMatchObject([
         {
-          id: '814c6b60-2965-4464-abed-1587b4668e1e',
+          id: 'a2444f70-749c-41e8-bdc3-2de2348afeb0',
           name: 'Size',
-          displayName: 'Size',
+          displayName: 'Select Size',
+          options: [],
+          product: {
+            id: 'd17fac76-f22a-43cb-9336-b91b3e0c2aca',
+            name: 'Test Product',
+            description: 'Test Description',
+            basePrice: 99.99,
+            isActive: true,
+            createdAt: '2024-01-01T00:00:00.000Z',
+            updatedAt: '2024-01-01T00:00:00.000Z',
+          },
           createdAt: '2024-01-01T00:00:00.000Z',
-          updatedAt: '2024-01-02T00:00:00.000Z',
+          updatedAt: '2024-01-01T00:00:00.000Z',
         },
       ]);
       expect(productOptionGroupsService.getAll).toHaveBeenCalledTimes(1);
@@ -99,12 +141,22 @@ describe('ProductOptionGroupController', () => {
         )
         .mockResolvedValue([
           {
-            id: 'ea88c5fd-e2fb-4d9a-9dd0-4a0f69228c61',
+            id: 'a2444f70-749c-41e8-bdc3-2de2348afeb0',
             name: 'Size',
-            productId: 'bb88c5fd-e2fb-4d9a-9dd0-4a0f69228c62',
+            displayName: 'Select Size',
+            product: {
+              id: 'd17fac76-f22a-43cb-9336-b91b3e0c2aca',
+              name: 'Test Product',
+              description: 'Test Description',
+              basePrice: 99.99,
+              isActive: true,
+              createdAt: new Date('2024-01-01'),
+              updatedAt: new Date('2024-01-01'),
+            } as Product,
+            options: [] as ProductOption[],
             createdAt: new Date('2024-01-01'),
             updatedAt: new Date('2024-01-01'),
-          },
+          } as ProductOptionGroup,
         ] as ProductOptionGroup[]);
 
       const productId = 'bb88c5fd-e2fb-4d9a-9dd0-4a0f69228c62';
@@ -113,10 +165,21 @@ describe('ProductOptionGroupController', () => {
       );
 
       expect(response.statusCode).toBe(HttpStatus.OK);
-      expect(response.body).toEqual([
+      expect(response.body).toMatchObject([
         {
-          id: 'ea88c5fd-e2fb-4d9a-9dd0-4a0f69228c61',
+          id: 'a2444f70-749c-41e8-bdc3-2de2348afeb0',
           name: 'Size',
+          displayName: 'Select Size',
+          options: [],
+          product: {
+            id: 'd17fac76-f22a-43cb-9336-b91b3e0c2aca',
+            name: 'Test Product',
+            description: 'Test Description',
+            basePrice: 99.99,
+            isActive: true,
+            createdAt: '2024-01-01T00:00:00.000Z',
+            updatedAt: '2024-01-01T00:00:00.000Z',
+          },
           createdAt: '2024-01-01T00:00:00.000Z',
           updatedAt: '2024-01-01T00:00:00.000Z',
         },
@@ -140,11 +203,21 @@ describe('ProductOptionGroupController', () => {
       jest
         .spyOn(ProductOptionGroupsService.prototype, 'create')
         .mockResolvedValue({
-          id: '814c6b60-2965-4464-abed-1587b4668e1e',
+          id: 'a2444f70-749c-41e8-bdc3-2de2348afeb0',
           name: 'Size',
-          displayName: 'Size',
+          displayName: 'Select Size',
+          product: {
+            id: 'd17fac76-f22a-43cb-9336-b91b3e0c2aca',
+            name: 'Test Product',
+            description: 'Test Description',
+            basePrice: 99.99,
+            isActive: true,
+            createdAt: new Date('2024-01-01'),
+            updatedAt: new Date('2024-01-01'),
+          } as Product,
+          options: [] as ProductOption[],
           createdAt: new Date('2024-01-01'),
-          updatedAt: new Date('2024-01-02'),
+          updatedAt: new Date('2024-01-01'),
         } as ProductOptionGroup);
 
       const createDto = {
@@ -161,12 +234,22 @@ describe('ProductOptionGroupController', () => {
         .send(createDto);
 
       expect(response.statusCode).toBe(HttpStatus.CREATED);
-      expect(response.body).toEqual({
-        id: '814c6b60-2965-4464-abed-1587b4668e1e',
+      expect(response.body).toMatchObject({
+        id: 'a2444f70-749c-41e8-bdc3-2de2348afeb0',
         name: 'Size',
-        displayName: 'Size',
+        displayName: 'Select Size',
+        options: [],
+        product: {
+          id: 'd17fac76-f22a-43cb-9336-b91b3e0c2aca',
+          name: 'Test Product',
+          description: 'Test Description',
+          basePrice: 99.99,
+          isActive: true,
+          createdAt: '2024-01-01T00:00:00.000Z',
+          updatedAt: '2024-01-01T00:00:00.000Z',
+        },
         createdAt: '2024-01-01T00:00:00.000Z',
-        updatedAt: '2024-01-02T00:00:00.000Z',
+        updatedAt: '2024-01-01T00:00:00.000Z',
       });
       expect(productOptionGroupsService.create).toHaveBeenCalledWith({
         name: 'Size',
@@ -181,11 +264,21 @@ describe('ProductOptionGroupController', () => {
       jest
         .spyOn(ProductOptionGroupsService.prototype, 'update')
         .mockResolvedValue({
-          id: '814c6b60-2965-4464-abed-1587b4668e1e',
+          id: 'a2444f70-749c-41e8-bdc3-2de2348afeb0',
           name: 'Size',
-          displayName: 'Size',
+          displayName: 'Select Size',
+          product: {
+            id: 'd17fac76-f22a-43cb-9336-b91b3e0c2aca',
+            name: 'Test Product',
+            description: 'Test Description',
+            basePrice: 99.99,
+            isActive: true,
+            createdAt: new Date('2024-01-01'),
+            updatedAt: new Date('2024-01-01'),
+          } as Product,
+          options: [] as ProductOption[],
           createdAt: new Date('2024-01-01'),
-          updatedAt: new Date('2024-01-02'),
+          updatedAt: new Date('2024-01-01'),
         } as ProductOptionGroup);
 
       const updateDto = {
@@ -199,12 +292,22 @@ describe('ProductOptionGroupController', () => {
         .send(updateDto);
 
       expect(response.statusCode).toBe(HttpStatus.OK);
-      expect(response.body).toEqual({
-        id: '814c6b60-2965-4464-abed-1587b4668e1e',
+      expect(response.body).toMatchObject({
+        id: 'a2444f70-749c-41e8-bdc3-2de2348afeb0',
         name: 'Size',
-        displayName: 'Size',
+        displayName: 'Select Size',
+        options: [],
+        product: {
+          id: 'd17fac76-f22a-43cb-9336-b91b3e0c2aca',
+          name: 'Test Product',
+          description: 'Test Description',
+          basePrice: 99.99,
+          isActive: true,
+          createdAt: '2024-01-01T00:00:00.000Z',
+          updatedAt: '2024-01-01T00:00:00.000Z',
+        },
         createdAt: '2024-01-01T00:00:00.000Z',
-        updatedAt: '2024-01-02T00:00:00.000Z',
+        updatedAt: '2024-01-01T00:00:00.000Z',
       });
       expect(productOptionGroupsService.update).toHaveBeenCalledWith(groupId, {
         name: 'Large',

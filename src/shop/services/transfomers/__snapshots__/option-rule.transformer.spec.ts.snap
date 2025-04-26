@@ -3,31 +3,29 @@
 exports[`transformOptionRule should transform option rule correctly 1`] = `
 {
   "createdAt": "2024-01-01T00:00:00.000Z",
-  "id": "rule123",
+  "id": "755cf8ae-950c-4be2-9a20-1fb6576b745e",
   "ifOption": {
-    "basePrice": null,
+    "basePrice": NaN,
     "createdAt": "2024-01-01T00:00:00.000Z",
     "displayName": "Product Size",
-    "id": "option1",
+    "id": "4636127e-769e-4136-9a6a-8fddb7ca9692",
     "isActive": true,
     "name": "Size",
-    "optionGroupId": undefined,
     "updatedAt": "2024-01-02T00:00:00.000Z",
   },
-  "ifOptionId": "option1",
+  "ifOptionId": "4636127e-769e-4136-9a6a-8fddb7ca9692",
   "isActive": true,
   "ruleType": "requires",
   "thenOption": {
-    "basePrice": null,
+    "basePrice": NaN,
     "createdAt": "2024-01-01T00:00:00.000Z",
     "displayName": "Product Color",
-    "id": "option2",
+    "id": "fb5d0e88-8014-4883-82d5-94d0af8e723f",
     "isActive": true,
     "name": "Color",
-    "optionGroupId": undefined,
     "updatedAt": "2024-01-02T00:00:00.000Z",
   },
-  "thenOptionId": "option2",
+  "thenOptionId": "fb5d0e88-8014-4883-82d5-94d0af8e723f",
   "updatedAt": "2024-01-02T00:00:00.000Z",
 }
 `;

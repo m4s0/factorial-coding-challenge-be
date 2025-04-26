@@ -288,6 +288,66 @@ const seedDatabase = async () => {
       outOfStock: true,
     });
 
+    await createInventoryItem(entityManager, {
+      productOptionId: productOption4.id,
+      quantity: Math.floor(Math.random() * 30) + 1,
+      outOfStock: false,
+    });
+
+    await createInventoryItem(entityManager, {
+      productOptionId: productOption5.id,
+      quantity: Math.floor(Math.random() * 30) + 1,
+      outOfStock: false,
+    });
+
+    await createInventoryItem(entityManager, {
+      productOptionId: productOption6.id,
+      quantity: Math.floor(Math.random() * 30) + 1,
+      outOfStock: false,
+    });
+
+    await createInventoryItem(entityManager, {
+      productOptionId: productOption7.id,
+      quantity: Math.floor(Math.random() * 30) + 1,
+      outOfStock: false,
+    });
+
+    await createInventoryItem(entityManager, {
+      productOptionId: productOption8.id,
+      quantity: Math.floor(Math.random() * 30) + 1,
+      outOfStock: false,
+    });
+
+    await createInventoryItem(entityManager, {
+      productOptionId: productOption9.id,
+      quantity: Math.floor(Math.random() * 30) + 1,
+      outOfStock: false,
+    });
+
+    await createInventoryItem(entityManager, {
+      productOptionId: productOption10.id,
+      quantity: Math.floor(Math.random() * 30) + 1,
+      outOfStock: false,
+    });
+
+    await createInventoryItem(entityManager, {
+      productOptionId: productOption11.id,
+      quantity: Math.floor(Math.random() * 30) + 1,
+      outOfStock: false,
+    });
+
+    await createInventoryItem(entityManager, {
+      productOptionId: productOption12.id,
+      quantity: Math.floor(Math.random() * 30) + 1,
+      outOfStock: false,
+    });
+
+    await createInventoryItem(entityManager, {
+      productOptionId: productOption13.id,
+      quantity: Math.floor(Math.random() * 30) + 1,
+      outOfStock: false,
+    });
+
     logger.log('Database has been seeded!', 'Seed');
   } catch (error) {
     logger.error(`Error seeding database: ${JSON.stringify(error)}`, 'Seed');

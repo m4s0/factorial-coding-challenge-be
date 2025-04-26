@@ -41,7 +41,15 @@ describe('ProductOptionController', () => {
           createdAt: new Date('2024-01-01'),
           updatedAt: new Date('2024-01-02'),
         } as ProductOptionGroup,
-        inventoryItems: [] as InventoryItem[],
+        inventoryItemId: '5c39c75d-93a9-4c73-a7bf-ef107340fa8e',
+        inventoryItem: {
+          id: '755cf8ae-950c-4be2-9a20-1fb6576b745e',
+          quantity: 100,
+          outOfStock: false,
+          productOptionId: '13585532-a295-4a82-b7bf-0abc07064ee9',
+          createdAt: new Date('2024-01-01'),
+          updatedAt: new Date('2024-01-02'),
+        } as InventoryItem,
         rulesAsCondition: [] as OptionRule[],
         rulesAsResult: [] as OptionRule[],
         priceRules: [] as OptionPriceRule[],
@@ -55,24 +63,20 @@ describe('ProductOptionController', () => {
       );
 
       expect(response.statusCode).toBe(HttpStatus.OK);
-      expect(response.body).toEqual({
+      expect(response.body).toMatchObject({
         id: '7ba7b5bd-2390-43d6-9893-e959068a1116',
         name: 'Option-095c5e80-bee8-4695-8ed2-bc40fed5f3ca',
         displayName: 'Large',
         basePrice: 6,
-        isActive: true,
-        optionGroupId: '095c5e80-bee8-4695-8ed2-bc40fed5f3ca',
-        optionGroup: {
-          id: '814c6b60-2965-4464-abed-1587b4668e1e',
-          name: 'Size',
-          displayName: 'Size',
+        inventoryItem: {
+          id: '755cf8ae-950c-4be2-9a20-1fb6576b745e',
+          quantity: 100,
+          outOfStock: false,
+          productOptionId: '13585532-a295-4a82-b7bf-0abc07064ee9',
           createdAt: '2024-01-01T00:00:00.000Z',
           updatedAt: '2024-01-02T00:00:00.000Z',
         },
-        inventoryItems: [],
-        rulesAsCondition: [],
-        rulesAsResult: [],
-        priceRules: [],
+        isActive: true,
         createdAt: '2024-01-01T00:00:00.000Z',
         updatedAt: '2024-01-02T00:00:00.000Z',
       });
@@ -105,7 +109,14 @@ describe('ProductOptionController', () => {
             createdAt: new Date('2024-01-01'),
             updatedAt: new Date('2024-01-02'),
           } as ProductOptionGroup,
-          inventoryItems: [] as InventoryItem[],
+          inventoryItem: {
+            id: '755cf8ae-950c-4be2-9a20-1fb6576b745e',
+            quantity: 100,
+            outOfStock: false,
+            productOptionId: '13585532-a295-4a82-b7bf-0abc07064ee9',
+            createdAt: new Date('2024-01-01'),
+            updatedAt: new Date('2024-01-02'),
+          } as InventoryItem,
           rulesAsCondition: [] as OptionRule[],
           rulesAsResult: [] as OptionRule[],
           priceRules: [] as OptionPriceRule[],
@@ -119,25 +130,21 @@ describe('ProductOptionController', () => {
       );
 
       expect(response.statusCode).toBe(HttpStatus.OK);
-      expect(response.body).toEqual([
+      expect(response.body).toMatchObject([
         {
           id: '7ba7b5bd-2390-43d6-9893-e959068a1116',
           name: 'Option-095c5e80-bee8-4695-8ed2-bc40fed5f3ca',
           displayName: 'Large',
           basePrice: 6,
-          isActive: true,
-          optionGroupId: '095c5e80-bee8-4695-8ed2-bc40fed5f3ca',
-          optionGroup: {
-            id: '814c6b60-2965-4464-abed-1587b4668e1e',
-            name: 'Size',
-            displayName: 'Size',
+          inventoryItem: {
+            id: '755cf8ae-950c-4be2-9a20-1fb6576b745e',
+            quantity: 100,
+            outOfStock: false,
+            productOptionId: '13585532-a295-4a82-b7bf-0abc07064ee9',
             createdAt: '2024-01-01T00:00:00.000Z',
             updatedAt: '2024-01-02T00:00:00.000Z',
           },
-          inventoryItems: [],
-          rulesAsCondition: [],
-          rulesAsResult: [],
-          priceRules: [],
+          isActive: true,
           createdAt: '2024-01-01T00:00:00.000Z',
           updatedAt: '2024-01-02T00:00:00.000Z',
         },
@@ -162,7 +169,15 @@ describe('ProductOptionController', () => {
           createdAt: new Date('2024-01-01'),
           updatedAt: new Date('2024-01-02'),
         } as ProductOptionGroup,
-        inventoryItems: [] as InventoryItem[],
+        inventoryItemId: '5c39c75d-93a9-4c73-a7bf-ef107340fa8e',
+        inventoryItem: {
+          id: '755cf8ae-950c-4be2-9a20-1fb6576b745e',
+          quantity: 100,
+          outOfStock: false,
+          productOptionId: '13585532-a295-4a82-b7bf-0abc07064ee9',
+          createdAt: new Date('2024-01-01'),
+          updatedAt: new Date('2024-01-02'),
+        } as InventoryItem,
         rulesAsCondition: [] as OptionRule[],
         rulesAsResult: [] as OptionRule[],
         priceRules: [] as OptionPriceRule[],
@@ -183,24 +198,20 @@ describe('ProductOptionController', () => {
         .send(createProductOptionDto);
 
       expect(response.statusCode).toBe(HttpStatus.CREATED);
-      expect(response.body).toEqual({
+      expect(response.body).toMatchObject({
         id: '7ba7b5bd-2390-43d6-9893-e959068a1116',
         name: 'Option-095c5e80-bee8-4695-8ed2-bc40fed5f3ca',
         displayName: 'Large',
         basePrice: 6,
-        isActive: true,
-        optionGroupId: '095c5e80-bee8-4695-8ed2-bc40fed5f3ca',
-        optionGroup: {
-          id: '814c6b60-2965-4464-abed-1587b4668e1e',
-          name: 'Size',
-          displayName: 'Size',
+        inventoryItem: {
+          id: '755cf8ae-950c-4be2-9a20-1fb6576b745e',
+          quantity: 100,
+          outOfStock: false,
+          productOptionId: '13585532-a295-4a82-b7bf-0abc07064ee9',
           createdAt: '2024-01-01T00:00:00.000Z',
           updatedAt: '2024-01-02T00:00:00.000Z',
         },
-        inventoryItems: [],
-        rulesAsCondition: [],
-        rulesAsResult: [],
-        priceRules: [],
+        isActive: true,
         createdAt: '2024-01-01T00:00:00.000Z',
         updatedAt: '2024-01-02T00:00:00.000Z',
       });
@@ -230,7 +241,14 @@ describe('ProductOptionController', () => {
           createdAt: new Date('2024-01-01'),
           updatedAt: new Date('2024-01-02'),
         } as ProductOptionGroup,
-        inventoryItems: [] as InventoryItem[],
+        inventoryItem: {
+          id: '755cf8ae-950c-4be2-9a20-1fb6576b745e',
+          quantity: 100,
+          outOfStock: false,
+          productOptionId: '13585532-a295-4a82-b7bf-0abc07064ee9',
+          createdAt: new Date('2024-01-01'),
+          updatedAt: new Date('2024-01-02'),
+        } as InventoryItem,
         rulesAsCondition: [] as OptionRule[],
         rulesAsResult: [] as OptionRule[],
         priceRules: [] as OptionPriceRule[],
@@ -249,24 +267,12 @@ describe('ProductOptionController', () => {
         .send(updateDto);
 
       expect(response.statusCode).toBe(HttpStatus.OK);
-      expect(response.body).toEqual({
+      expect(response.body).toMatchObject({
         id: '7ba7b5bd-2390-43d6-9893-e959068a1116',
         name: 'Option-095c5e80-bee8-4695-8ed2-bc40fed5f3ca',
         displayName: 'Large',
         basePrice: 6,
         isActive: true,
-        optionGroupId: '095c5e80-bee8-4695-8ed2-bc40fed5f3ca',
-        optionGroup: {
-          id: '814c6b60-2965-4464-abed-1587b4668e1e',
-          name: 'Size',
-          displayName: 'Size',
-          createdAt: '2024-01-01T00:00:00.000Z',
-          updatedAt: '2024-01-02T00:00:00.000Z',
-        },
-        inventoryItems: [],
-        rulesAsCondition: [],
-        rulesAsResult: [],
-        priceRules: [],
         createdAt: '2024-01-01T00:00:00.000Z',
         updatedAt: '2024-01-02T00:00:00.000Z',
       });

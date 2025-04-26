@@ -30,22 +30,17 @@ export class ProductRepository {
     return queryBuilder.getOne();
   }
 
-  async findAll(categoryName?: string, isActive?: boolean): Promise<Product[]> {
+  async findAll(isActive?: boolean): Promise<Product[]> {
     const queryBuilder = this.productRepository
       .createQueryBuilder('product')
       .leftJoinAndSelect('product.category', 'category')
+      .leftJoinAndSelect('product.optionGroups', 'optionGroups')
+      .leftJoinAndSelect('optionGroups.options', 'options')
       .orderBy('product.createdAt', 'DESC');
 
     if (isActive !== undefined) {
       queryBuilder.where('product.isActive = :isActive', {
         isActive: Boolean(isActive),
-      });
-    }
-
-    if (categoryName) {
-      const whereClause = isActive !== undefined ? 'andWhere' : 'where';
-      queryBuilder[whereClause]('category.name = :name', {
-        name: categoryName,
       });
     }
 

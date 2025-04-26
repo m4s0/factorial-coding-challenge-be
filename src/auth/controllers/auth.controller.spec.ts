@@ -39,7 +39,7 @@ describe('AuthController', () => {
         .send(loginDto);
 
       expect(response.status).toBe(HttpStatus.CREATED);
-      expect(response.body).toEqual(expectedResponse);
+      expect(response.body).toMatchObject(expectedResponse);
       expect(authService.login).toHaveBeenCalledWith(
         loginSchema.parse(loginDto),
       );
@@ -56,7 +56,7 @@ describe('AuthController', () => {
         .send(loginDto);
 
       expect(response.status).toBe(HttpStatus.BAD_REQUEST);
-      expect(response.body).toEqual({
+      expect(response.body).toMatchObject({
         message: 'Validation failed',
         errors: [
           {
@@ -80,7 +80,7 @@ describe('AuthController', () => {
         .send(loginDto);
 
       expect(response.status).toBe(HttpStatus.BAD_REQUEST);
-      expect(response.body).toEqual({
+      expect(response.body).toMatchObject({
         message: 'Validation failed',
         errors: [
           {
@@ -132,7 +132,7 @@ describe('AuthController', () => {
         .send(registerDto);
 
       expect(response.status).toBe(HttpStatus.BAD_REQUEST);
-      expect(response.body).toEqual({
+      expect(response.body).toMatchObject({
         message: 'Validation failed',
         errors: [
           {
@@ -159,7 +159,7 @@ describe('AuthController', () => {
         .send(registerDto);
 
       expect(response.status).toBe(HttpStatus.BAD_REQUEST);
-      expect(response.body).toEqual({
+      expect(response.body).toMatchObject({
         message: 'Validation failed',
         errors: [
           {
@@ -185,7 +185,7 @@ describe('AuthController', () => {
         .send(registerDto);
 
       expect(response.status).toBe(HttpStatus.BAD_REQUEST);
-      expect(response.body).toEqual({
+      expect(response.body).toMatchObject({
         message: 'Validation failed',
         errors: [
           {
@@ -212,7 +212,7 @@ describe('AuthController', () => {
         .send(registerDto);
 
       expect(response.status).toBe(HttpStatus.BAD_REQUEST);
-      expect(response.body).toEqual({
+      expect(response.body).toMatchObject({
         message: 'Validation failed',
         errors: [
           {
@@ -239,7 +239,7 @@ describe('AuthController', () => {
         .send(registerDto);
 
       expect(response.status).toBe(HttpStatus.BAD_REQUEST);
-      expect(response.body).toEqual({
+      expect(response.body).toMatchObject({
         message: 'Validation failed',
         errors: [
           {

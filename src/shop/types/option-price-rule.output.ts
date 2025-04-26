@@ -4,8 +4,9 @@ export type OptionPriceRuleOutput = {
   id: string;
   price: number;
   targetOptionId: string;
-  targetOption: ProductOptionOutput;
+  targetOption?: ProductOptionOutput;
   dependentOptionId: string;
+  dependentOption?: ProductOptionOutput;
   isActive: boolean;
   createdAt: string;
   updatedAt: string;

@@ -5,6 +5,7 @@ import {
   JoinColumn,
   ManyToOne,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -30,20 +31,15 @@ export class ProductOption {
   @Column({ default: true })
   declare isActive: boolean;
 
-  @ManyToOne(() => ProductOptionGroup, (optionGroup) => optionGroup.options, {
-    onDelete: 'CASCADE',
-  })
-  @JoinColumn()
+  @ManyToOne(() => ProductOptionGroup, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'option_group_id' })
   declare optionGroup: ProductOptionGroup;
 
-  @Column()
+  @Column({ name: 'option_group_id' })
   declare optionGroupId: string;
 
-  @OneToMany(
-    () => InventoryItem,
-    (inventoryItem) => inventoryItem.productOption,
-  )
-  declare inventoryItems: InventoryItem[];
+  @OneToOne(() => InventoryItem, (inventoryItem) => inventoryItem.productOption)
+  declare inventoryItem: InventoryItem;
 
   @OneToMany(() => OptionRule, (optionRule) => optionRule.ifOption)
   declare rulesAsCondition: OptionRule[];

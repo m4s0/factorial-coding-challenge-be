@@ -341,10 +341,14 @@ To add a new customization choice:
 - `DELETE /cart/items/:itemId` – Delete item from cart
 - `PATCH /cart/items/:itemId` – Update item quantity
 
-### Inventory
+### Inventory Items
 
-- `GET /inventory/product/:productId` – Get product inventory
-- `PATCH /inventory/option/:optionId` – Update option inventory
+- `GET /inventory/product/:productId` – Get product InventoryItem
+- `GET /inventory/:inventoryItemId` – Get specific InventoryItem
+- `GET /inventory` – Get all InventoryItems
+- `POST /inventory` – Create InventoryItem
+- `PATCH /inventory/:inventoryItemId` – Update InventoryItem
+- `DELETE /inventory/:inventoryItemId` – Delete InventoryItem
 
 ### Product Categories
 
@@ -353,6 +357,22 @@ To add a new customization choice:
 - `POST /product-categories` – Create category
 - `PATCH /product-categories/:categoryId` – Update category
 - `DELETE /product-categories/:categoryId` – Delete category
+
+### Option Rules
+
+- `GET /option-rules/:ruleId` – Get specific OptionRule
+- `GET /option-rules` – Get all OptionRules
+- `POST /option-rules` – Create OptionRule
+- `PATCH /option-rules/:ruleId` – Update OptionRule
+- `DELETE /option-rules/:ruleId` – Delete OptionRule
+
+### Option Price Rules
+
+- `GET /option-price-rules/:priceRuleId` – Get specific OptionPriceRule
+- `GET /option-price-rules` – Get all OptionPriceRules
+- `POST /option-price-rules` – Create OptionPriceRule
+- `PATCH /option-price-rules/:priceRuleId` – Update OptionPriceRule
+- `DELETE /option-price-rules/:priceRuleId` – Delete OptionPriceRule
 
 ### Product Options
 
@@ -376,9 +396,7 @@ To add a new customization choice:
 - `GET /products` – Get all products
 - `GET /products/:productId` – Get specific product
 - `GET /products/:productId/with-options` – Get product with options
-- `GET /products/:productId/configure` – Get product configuration
-- `GET /products/:productId/validate` – Validate product configuration
-- `GET /products/:productId/price` – Get product price
+- `GET /products/:productId/configuration` – Get product configuration
 - `POST /products` – Create product
 - `PATCH /products/:productId` – Update product
 - `DELETE /products/:productId` – Delete product  

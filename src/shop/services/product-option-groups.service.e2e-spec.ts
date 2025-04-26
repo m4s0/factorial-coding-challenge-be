@@ -7,6 +7,7 @@ import { createTestApp } from '../../../test/create-test.app';
 import { createProduct } from '../../../test/helpers/create-product';
 import { createProductOptionGroup } from '../../../test/helpers/create-product-option-group';
 import { createProductCategory } from '../../../test/helpers/create-product-category';
+import { createProductOption } from '../../../test/helpers/create-product-option';
 
 describe('ProductOptionGroupsService', () => {
   let app: INestApplication;
@@ -36,6 +37,7 @@ describe('ProductOptionGroupsService', () => {
         entityManager,
         product,
       );
+      await createProductOption(entityManager, optionGroup);
 
       const result = await productOptionGroupsService.getById(optionGroup.id);
 
@@ -68,6 +70,10 @@ describe('ProductOptionGroupsService', () => {
         entityManager,
         product,
       );
+      const productOption = await createProductOption(
+        entityManager,
+        optionGroup,
+      );
 
       const results = await productOptionGroupsService.getAll();
 
@@ -89,6 +95,18 @@ describe('ProductOptionGroupsService', () => {
           createdAt: product.createdAt,
           updatedAt: product.updatedAt,
         },
+        options: [
+          {
+            id: productOption.id,
+            name: productOption.name,
+            displayName: productOption.displayName,
+            basePrice: productOption.basePrice.toString(),
+            isActive: productOption.isActive,
+            optionGroupId: productOption.optionGroupId,
+            createdAt: productOption.createdAt,
+            updatedAt: productOption.updatedAt,
+          },
+        ],
       });
     });
   });
@@ -102,6 +120,10 @@ describe('ProductOptionGroupsService', () => {
       const optionGroup = await createProductOptionGroup(
         entityManager,
         product,
+      );
+      const productOption = await createProductOption(
+        entityManager,
+        optionGroup,
       );
 
       const result =
@@ -117,7 +139,18 @@ describe('ProductOptionGroupsService', () => {
           productId: product.id,
           createdAt: optionGroup.createdAt,
           updatedAt: optionGroup.updatedAt,
-          options: [],
+          options: [
+            {
+              id: productOption.id,
+              name: productOption.name,
+              displayName: productOption.displayName,
+              basePrice: productOption.basePrice.toString(),
+              isActive: productOption.isActive,
+              optionGroupId: productOption.optionGroupId,
+              createdAt: productOption.createdAt,
+              updatedAt: productOption.updatedAt,
+            },
+          ],
         },
       ]);
     });
@@ -157,6 +190,7 @@ describe('ProductOptionGroupsService', () => {
         entityManager,
         product,
       );
+      await createProductOption(entityManager, optionGroup);
 
       const updateGroupInput = {
         name: 'Updated Name',
@@ -202,6 +236,7 @@ describe('ProductOptionGroupsService', () => {
         entityManager,
         product,
       );
+      await createProductOption(entityManager, optionGroup);
 
       await productOptionGroupsService.remove(optionGroup.id);
 
