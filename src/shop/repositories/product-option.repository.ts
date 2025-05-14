@@ -14,21 +14,27 @@ export class ProductOptionRepository {
     optionId: string,
     isActive?: boolean,
   ): Promise<ProductOption | null> {
-    const where: { id: string; isActive?: boolean } = { id: optionId };
+    const queryBuilder = this.productOptionRepository
+      .createQueryBuilder('option')
+      .innerJoinAndSelect('option.optionGroup', 'group')
+      .leftJoinAndSelect('option.inventoryItem', 'inventoryItem')
+      .where('option.id = :optionId', { optionId });
 
     if (typeof isActive !== 'undefined') {
-      where.isActive = Boolean(isActive);
+      queryBuilder.andWhere('option.isActive = :isActive', {
+        isActive: Boolean(isActive),
+      });
     }
 
-    return this.productOptionRepository.findOneBy(where);
+    return queryBuilder.getOne();
   }
 
   async findAll(isActive?: boolean): Promise<ProductOption[]> {
     const queryBuilder = this.productOptionRepository
       .createQueryBuilder('option')
       .innerJoinAndSelect('option.optionGroup', 'group')
-      .orderBy('option.createdAt', 'DESC')
-      .orderBy('group.createdAt', 'DESC');
+      .leftJoinAndSelect('option.inventoryItem', 'inventoryItem')
+      .orderBy('option.createdAt', 'DESC');
 
     if (isActive !== undefined) {
       queryBuilder.where('option.isActive = :isActive', {
@@ -39,7 +45,7 @@ export class ProductOptionRepository {
     return queryBuilder.getMany();
   }
 
-  async findOptionsByIds(
+  async findAllByIds(
     optionIds: string[],
     isActive?: boolean,
   ): Promise<ProductOption[]> {
@@ -50,6 +56,7 @@ export class ProductOptionRepository {
     const queryBuilder = this.productOptionRepository
       .createQueryBuilder('option')
       .innerJoinAndSelect('option.optionGroup', 'group')
+      .leftJoinAndSelect('option.inventoryItem', 'inventoryItem')
       .where('option.id IN (:...optionIds)', { optionIds })
       .orderBy('option.createdAt', 'DESC');
 
@@ -62,19 +69,22 @@ export class ProductOptionRepository {
     return queryBuilder.getMany();
   }
 
-  async findOptionsByProductId(productId: string): Promise<ProductOption[]> {
+  async findAllByProductId(productId: string): Promise<ProductOption[]> {
     return this.productOptionRepository
       .createQueryBuilder('option')
-      .innerJoin('option.optionGroup', 'group')
-      .innerJoin('group.product', 'product')
+      .innerJoinAndSelect('option.optionGroup', 'group')
+      .innerJoinAndSelect('group.product', 'product')
       .where('product.id = :productId', { productId })
       .getMany();
   }
 
-  async findOptionsByGroupId(groupId: string): Promise<ProductOption[]> {
-    return this.productOptionRepository.find({
-      where: { optionGroupId: groupId, isActive: true },
-      order: { name: 'DESC' },
-    });
+  async findAllByGroupId(groupId: string): Promise<ProductOption[]> {
+    return this.productOptionRepository
+      .createQueryBuilder('option')
+      .leftJoinAndSelect('option.inventoryItem', 'inventoryItem')
+      .where('option.optionGroupId = :groupId', { groupId })
+      .andWhere('option.isActive = :isActive', { isActive: true })
+      .orderBy('option.name', 'DESC')
+      .getMany();
   }
 }

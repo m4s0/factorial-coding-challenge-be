@@ -1,5 +1,7 @@
 import { EntityManager } from 'typeorm';
-import { INestApplication } from '@nestjs/common';
+import { INestApplication, NotFoundException } from '@nestjs/common';
+import { createUUID } from '@Common/utils/create-uuid';
+import { OptionRule } from '@Shop/entities/option-rule.entity';
 import { OptionRulesService } from './option-rules.service';
 import { createTestApp } from '../../../test/create-test.app';
 import { createProduct } from '../../../test/helpers/create-product';
@@ -8,6 +10,7 @@ import { RuleType } from '../entities/rule-type';
 import { createProductOptionGroup } from '../../../test/helpers/create-product-option-group';
 import { createOptionRule } from '../../../test/helpers/create-option-rule';
 import { createProductCategory } from '../../../test/helpers/create-product-category';
+import { createInventoryItem } from '../../../test/helpers/create-inventory-item';
 
 describe('OptionRulesService', () => {
   let app: INestApplication;
@@ -25,7 +28,94 @@ describe('OptionRulesService', () => {
     await app.close();
   });
 
-  describe('createRule()', () => {
+  describe('getAll()', () => {
+    it('should return all option rules', async () => {
+      const productCategory = await createProductCategory(entityManager);
+      const product = await createProduct(entityManager, {
+        categoryId: productCategory.id,
+      });
+      const optionGroup = await createProductOptionGroup(
+        entityManager,
+        product,
+      );
+      const option1 = await createProductOption(entityManager, optionGroup);
+      await createInventoryItem(entityManager, {
+        productOptionId: option1.id,
+        quantity: 10,
+        outOfStock: false,
+      });
+      const option2 = await createProductOption(entityManager, optionGroup);
+      await createInventoryItem(entityManager, {
+        productOptionId: option2.id,
+        quantity: 10,
+        outOfStock: false,
+      });
+      const rule = await createOptionRule(
+        entityManager,
+        option1.id,
+        option2.id,
+        RuleType.REQUIRES,
+      );
+
+      const rules = await optionRulesService.getAll();
+
+      expect(rules[0]).toMatchObject({
+        id: rule.id,
+        ifOptionId: option1.id,
+        thenOptionId: option2.id,
+        ruleType: RuleType.REQUIRES,
+      });
+    });
+  });
+
+  describe('getById()', () => {
+    it('should return rule by id', async () => {
+      const productCategory = await createProductCategory(entityManager);
+      const product = await createProduct(entityManager, {
+        categoryId: productCategory.id,
+      });
+      const optionGroup = await createProductOptionGroup(
+        entityManager,
+        product,
+      );
+      const option1 = await createProductOption(entityManager, optionGroup);
+      await createInventoryItem(entityManager, {
+        productOptionId: option1.id,
+        quantity: 10,
+        outOfStock: false,
+      });
+      const option2 = await createProductOption(entityManager, optionGroup);
+      await createInventoryItem(entityManager, {
+        productOptionId: option2.id,
+        quantity: 10,
+        outOfStock: false,
+      });
+      const rule = await createOptionRule(
+        entityManager,
+        option1.id,
+        option2.id,
+        RuleType.REQUIRES,
+      );
+
+      const foundRule = await optionRulesService.getById(rule.id);
+
+      expect(foundRule).toMatchObject({
+        id: rule.id,
+        ifOptionId: option1.id,
+        thenOptionId: option2.id,
+        ruleType: RuleType.REQUIRES,
+      });
+    });
+
+    it('should return an error when rule does not exist', async () => {
+      const nonExistentId = createUUID();
+      await expect(optionRulesService.getById(nonExistentId)).rejects.toThrow(
+        new NotFoundException(`OptionRule with ID ${nonExistentId} not found`),
+      );
+    });
+  });
+
+  describe('create()', () => {
     it('should create a new option rule', async () => {
       const productCategory = await createProductCategory(entityManager);
       const product = await createProduct(entityManager, {
@@ -44,11 +134,11 @@ describe('OptionRulesService', () => {
         optionGroup,
       );
 
-      const rule = await optionRulesService.createRule(
-        productOption1.id,
-        productOption2.id,
-        RuleType.REQUIRES,
-      );
+      const rule = await optionRulesService.create({
+        ifOptionId: productOption1.id,
+        thenOptionId: productOption2.id,
+        ruleType: RuleType.REQUIRES,
+      });
 
       expect(rule).toMatchObject({
         id: expect.any(String),
@@ -57,6 +147,99 @@ describe('OptionRulesService', () => {
         ruleType: RuleType.REQUIRES,
         isActive: true,
       });
+    });
+  });
+
+  describe('update()', () => {
+    it('should update an existing rule', async () => {
+      const productCategory = await createProductCategory(entityManager);
+      const product = await createProduct(entityManager, {
+        categoryId: productCategory.id,
+      });
+      const optionGroup = await createProductOptionGroup(
+        entityManager,
+        product,
+      );
+      const option1 = await createProductOption(entityManager, optionGroup);
+      await createInventoryItem(entityManager, {
+        productOptionId: option1.id,
+        quantity: 10,
+        outOfStock: false,
+      });
+      const option2 = await createProductOption(entityManager, optionGroup);
+      await createInventoryItem(entityManager, {
+        productOptionId: option2.id,
+        quantity: 10,
+        outOfStock: false,
+      });
+      const rule = await createOptionRule(
+        entityManager,
+        option1.id,
+        option2.id,
+        RuleType.REQUIRES,
+      );
+
+      const updatedRule = await optionRulesService.update(rule.id, {
+        ruleType: RuleType.EXCLUDES,
+      });
+
+      expect(updatedRule).toMatchObject({
+        id: rule.id,
+        ifOptionId: option1.id,
+        thenOptionId: option2.id,
+        ruleType: RuleType.EXCLUDES,
+        isActive: true,
+      });
+    });
+
+    it('should get an error if OptionRule does not exist', async () => {
+      await expect(
+        optionRulesService.update(createUUID(), {
+          ruleType: RuleType.EXCLUDES,
+        }),
+      ).rejects.toThrow(NotFoundException);
+    });
+  });
+
+  describe('remove()', () => {
+    it('should remove an existing rule', async () => {
+      const productCategory = await createProductCategory(entityManager);
+      const product = await createProduct(entityManager, {
+        categoryId: productCategory.id,
+      });
+      const optionGroup = await createProductOptionGroup(
+        entityManager,
+        product,
+      );
+      const option1 = await createProductOption(entityManager, optionGroup);
+      await createInventoryItem(entityManager, {
+        productOptionId: option1.id,
+        quantity: 10,
+        outOfStock: false,
+      });
+      const option2 = await createProductOption(entityManager, optionGroup);
+      await createInventoryItem(entityManager, {
+        productOptionId: option2.id,
+        quantity: 10,
+        outOfStock: false,
+      });
+      const rule = await createOptionRule(
+        entityManager,
+        option1.id,
+        option2.id,
+        RuleType.REQUIRES,
+      );
+
+      await optionRulesService.remove(rule.id);
+
+      const result = await entityManager.findOne(OptionRule, {
+        where: { id: rule.id },
+      });
+      expect(result).toBeNull();
+    });
+
+    it('should get an error if OptionRule does not exist', async () => {
+      await expect(optionRulesService.remove(createUUID())).rejects.toThrow();
     });
   });
 
@@ -71,7 +254,17 @@ describe('OptionRulesService', () => {
         product,
       );
       const option1 = await createProductOption(entityManager, optionGroup);
+      await createInventoryItem(entityManager, {
+        productOptionId: option1.id,
+        quantity: 10,
+        outOfStock: false,
+      });
       const option2 = await createProductOption(entityManager, optionGroup);
+      await createInventoryItem(entityManager, {
+        productOptionId: option2.id,
+        quantity: 10,
+        outOfStock: false,
+      });
       const rule = await createOptionRule(
         entityManager,
         option1.id,
@@ -79,7 +272,7 @@ describe('OptionRulesService', () => {
         RuleType.REQUIRES,
       );
 
-      const rules = await optionRulesService.findRulesByProductId(product.id);
+      const rules = await optionRulesService.getRulesByProductId(product.id);
 
       expect(rules).toHaveLength(1);
       expect(rules[0]).toMatchObject({
@@ -99,9 +292,14 @@ describe('OptionRulesService', () => {
         entityManager,
         product,
       );
-      await createProductOption(entityManager, optionGroup);
+      const option = await createProductOption(entityManager, optionGroup);
+      await createInventoryItem(entityManager, {
+        productOptionId: option.id,
+        quantity: 10,
+        outOfStock: false,
+      });
 
-      const rules = await optionRulesService.findRulesByProductId(product.id);
+      const rules = await optionRulesService.getRulesByProductId(product.id);
 
       expect(rules).toHaveLength(0);
     });
@@ -130,7 +328,17 @@ describe('OptionRulesService', () => {
         product,
       );
       const option1 = await createProductOption(entityManager, optionGroup);
+      await createInventoryItem(entityManager, {
+        productOptionId: option1.id,
+        quantity: 10,
+        outOfStock: false,
+      });
       const option2 = await createProductOption(entityManager, optionGroup);
+      await createInventoryItem(entityManager, {
+        productOptionId: option2.id,
+        quantity: 10,
+        outOfStock: false,
+      });
       await createOptionRule(
         entityManager,
         option1.id,
@@ -161,7 +369,17 @@ describe('OptionRulesService', () => {
         product,
       );
       const option1 = await createProductOption(entityManager, optionGroup);
+      await createInventoryItem(entityManager, {
+        productOptionId: option1.id,
+        quantity: 10,
+        outOfStock: false,
+      });
       const option2 = await createProductOption(entityManager, optionGroup);
+      await createInventoryItem(entityManager, {
+        productOptionId: option2.id,
+        quantity: 10,
+        outOfStock: false,
+      });
       await createOptionRule(
         entityManager,
         option1.id,
@@ -196,9 +414,29 @@ describe('OptionRulesService', () => {
         product,
       );
       const option1 = await createProductOption(entityManager, optionGroup1);
+      await createInventoryItem(entityManager, {
+        productOptionId: option1.id,
+        quantity: 10,
+        outOfStock: false,
+      });
       const option2 = await createProductOption(entityManager, optionGroup1);
+      await createInventoryItem(entityManager, {
+        productOptionId: option2.id,
+        quantity: 10,
+        outOfStock: false,
+      });
       const option3 = await createProductOption(entityManager, optionGroup1);
+      await createInventoryItem(entityManager, {
+        productOptionId: option3.id,
+        quantity: 10,
+        outOfStock: false,
+      });
       const option4 = await createProductOption(entityManager, optionGroup2);
+      await createInventoryItem(entityManager, {
+        productOptionId: option4.id,
+        quantity: 10,
+        outOfStock: false,
+      });
       await createOptionRule(
         entityManager,
         option1.id,

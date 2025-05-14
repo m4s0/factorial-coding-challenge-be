@@ -5,9 +5,9 @@ export type OptionRuleOutput = {
   id: string;
   ruleType: RuleType;
   ifOptionId: string;
-  ifOption: ProductOptionOutput;
+  ifOption?: ProductOptionOutput;
   thenOptionId: string;
-  thenOption: ProductOptionOutput;
+  thenOption?: ProductOptionOutput;
   isActive: boolean;
   createdAt: string;
   updatedAt: string;

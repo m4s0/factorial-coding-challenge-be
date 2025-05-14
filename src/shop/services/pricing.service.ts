@@ -20,10 +20,7 @@ export class PricingService {
     let totalPrice = 0;
 
     const selectedProductOptions =
-      await this.productOptionRepository.findOptionsByIds(
-        selectedOptionIds,
-        true,
-      );
+      await this.productOptionRepository.findAllByIds(selectedOptionIds, true);
 
     if (selectedProductOptions.length === 0) {
       return totalPrice;

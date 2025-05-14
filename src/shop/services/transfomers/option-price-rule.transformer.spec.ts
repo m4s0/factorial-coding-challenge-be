@@ -1,74 +1,32 @@
 import { OptionPriceRule } from '@Shop/entities/option-price-rule.entity';
 import { transformOptionPriceRule } from '@Shop/services/transfomers/option-price-rule.transformer';
-import { ProductOptionGroup } from '@Shop/entities/product-option-group.entity';
 import { ProductOption } from '@Shop/entities/product-option.entity';
-import { Product } from '@Shop/entities/product.entity';
 
 describe('transformOptionPriceRule', () => {
-  it('should transform option price rule with all fields correctly', () => {
+  it('should transform option price rule correctly', () => {
     const optionPriceRule = {
-      id: 'price_1',
+      id: 'fb5d0e88-8014-4883-82d5-94d0af8e723f',
       price: 29.99,
-      targetOptionId: 'opt_1',
+      targetOptionId: '4636127e-769e-4136-9a6a-8fddb7ca9692',
       targetOption: {
-        id: 'opt_1',
+        id: '4636127e-769e-4136-9a6a-8fddb7ca9692',
         name: 'Color',
         displayName: 'Product Color',
         basePrice: 19.99,
         isActive: true,
-        optionGroupId: 'group_1',
-        optionGroup: {
-          id: 'group123',
-          name: 'Sizes',
-          isActive: true,
-          displayName: 'Sizes',
-          productId: '123',
-          product: {
-            id: 'd17fac76-f22a-43cb-9336-b91b3e0c2aca',
-            name: 'Test Product',
-            description: 'Test Description',
-            basePrice: 99.99,
-            isActive: true,
-            createdAt: new Date('2024-01-01'),
-            updatedAt: new Date('2024-01-01'),
-          } as Product,
-
-          options: [] as ProductOption[],
-          createdAt: new Date('2024-01-01'),
-          updatedAt: new Date('2024-01-02'),
-        } as ProductOptionGroup,
-        inventoryItems: [],
-        rulesAsCondition: [],
-        rulesAsResult: [],
-        priceRules: [],
         createdAt: new Date('2024-01-01'),
         updatedAt: new Date('2024-01-02'),
       } as ProductOption,
-      dependentOptionId: 'opt_2',
-      isActive: true,
-      createdAt: new Date('2024-01-01'),
-      updatedAt: new Date('2024-01-02'),
-    } as OptionPriceRule;
-
-    const result = transformOptionPriceRule(optionPriceRule);
-
-    expect(result).toMatchSnapshot();
-  });
-
-  it('should transform option price rule with minimal fields correctly', () => {
-    const optionPriceRule = {
-      id: 'price_1',
-      price: 29.99,
-      targetOptionId: 'opt_1',
-      targetOption: {
-        id: 'opt_1',
+      dependentOptionId: '755cf8ae-950c-4be2-9a20-1fb6576b745e',
+      dependentOption: {
+        id: '3df0a970-d440-4361-940c-07a8ef39c333',
         name: 'Color',
+        displayName: 'Product Color',
+        basePrice: 19.99,
         isActive: true,
-        optionGroupId: 'group_1',
         createdAt: new Date('2024-01-01'),
         updatedAt: new Date('2024-01-02'),
       } as ProductOption,
-      dependentOptionId: 'opt_2',
       isActive: true,
       createdAt: new Date('2024-01-01'),
       updatedAt: new Date('2024-01-02'),

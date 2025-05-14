@@ -7,9 +7,11 @@ export type ProductOutput = {
   description: string;
   basePrice: number;
   isActive: boolean;
-  categoryId: string;
-  category: ProductCategoryOutput;
-  optionGroups: ProductOptionGroupOutput[];
+  categoryId?: string;
+  category?: ProductCategoryOutput;
+  optionGroups?: ProductOptionGroupOutput[];
+  isValidConfiguration?: boolean;
+  price?: number;
   createdAt: string;
   updatedAt: string;
 };

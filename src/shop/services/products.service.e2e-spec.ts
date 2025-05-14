@@ -4,10 +4,7 @@ import { EntityManager } from 'typeorm';
 import { createUUID } from '@Common/utils/create-uuid';
 import { ProductCategory } from '@Shop/entities/product-category.entity';
 import { CreateProductInput } from '@Shop/types/create-product.input';
-import { InventoryService } from '@Shop/services/inventory.service';
-import { OptionRulesService } from '@Shop/services/option-rules.service';
 import { RuleType } from '@Shop/entities/rule-type';
-import { ProductOption } from '@Shop/entities/product-option.entity';
 import { PricingService } from '@Shop/services/pricing.service';
 import { Product } from '@Shop/entities/product.entity';
 import { createTestApp } from '../../../test/create-test.app';
@@ -16,6 +13,8 @@ import { createProduct } from '../../../test/helpers/create-product';
 import { createProductOptionGroup } from '../../../test/helpers/create-product-option-group';
 import { createProductCategory } from '../../../test/helpers/create-product-category';
 import { createProductOption } from '../../../test/helpers/create-product-option';
+import { createOptionRule } from '../../../test/helpers/create-option-rule';
+import { createInventoryItem } from '../../../test/helpers/create-inventory-item';
 
 describe('ProductsService', () => {
   let app: INestApplication<App>;
@@ -50,21 +49,6 @@ describe('ProductsService', () => {
           }),
         ]),
       );
-    });
-
-    it('should filter products by categoryName', async () => {
-      const categoryName = `Bicycle-${createUUID()}`;
-      const productCategory = await createProductCategory(entityManager, {
-        name: categoryName,
-      });
-      const product = await createProduct(entityManager, {
-        categoryId: productCategory.id,
-      });
-      const result = await productsService.getAll(categoryName);
-
-      expect(result[0]).toMatchObject({
-        id: product.id,
-      });
     });
   });
 
@@ -192,36 +176,6 @@ describe('ProductsService', () => {
 
   describe('getProductConfiguration()', () => {
     it('should return product configuration with options and rules', async () => {
-      jest
-        .spyOn(InventoryService.prototype, 'getInventoryStatusForProduct')
-        .mockResolvedValue([
-          {
-            productOptionId: 'option-1',
-            inStock: true,
-            quantity: 9,
-          },
-        ]);
-
-      const now = new Date();
-
-      const expectedRules = [
-        {
-          id: 'rule-1',
-          ifOptionId: 'option-1',
-          ifOption: { id: 'option-1' } as ProductOption,
-          thenOptionId: 'option-2',
-          thenOption: { id: 'option-2' } as ProductOption,
-          ruleType: RuleType.REQUIRES,
-          isActive: true,
-          createdAt: now,
-          updatedAt: now,
-        },
-      ];
-
-      jest
-        .spyOn(OptionRulesService.prototype, 'findRulesByProductId')
-        .mockResolvedValue(expectedRules);
-
       const productCategory = await createProductCategory(entityManager);
       const product = await createProduct(entityManager, {
         categoryId: productCategory.id,
@@ -230,22 +184,68 @@ describe('ProductsService', () => {
         entityManager,
         product,
       );
-      const productConfiguration =
-        await productsService.getProductConfiguration(product.id);
+      const option1 = await createProductOption(entityManager, optionGroup);
+      await createInventoryItem(entityManager, {
+        productOptionId: option1.id,
+        quantity: 10,
+        outOfStock: false,
+      });
+      const option2 = await createProductOption(entityManager, optionGroup);
+      await createInventoryItem(entityManager, {
+        productOptionId: option2.id,
+        quantity: 10,
+        outOfStock: false,
+      });
+      const optionRule = await createOptionRule(
+        entityManager,
+        option1.id,
+        option2.id,
+        RuleType.REQUIRES,
+      );
 
-      expect(productConfiguration).toMatchObject({
+      const result = await productsService.getProductConfiguration(product.id);
+
+      expect(result).toMatchObject({
         product: {
           id: product.id,
           name: product.name,
-          description: 'Trailblazer Pro description',
-          basePrice: 72.99,
+          description: product.description,
+          basePrice: product.basePrice,
           isActive: true,
           categoryId: product.categoryId,
+          category: {
+            id: productCategory.id,
+            name: productCategory.name,
+            description: productCategory.description,
+            isActive: productCategory.isActive,
+            createdAt: productCategory.createdAt.toISOString(),
+            updatedAt: productCategory.updatedAt.toISOString(),
+          },
           optionGroups: [
             {
               id: optionGroup.id,
               name: optionGroup.name,
               displayName: 'Wheels',
+              options: [
+                {
+                  id: option1.id,
+                  name: option1.name,
+                  displayName: option1.displayName,
+                  basePrice: option1.basePrice,
+                  isActive: option1.isActive,
+                  createdAt: option1.createdAt.toISOString(),
+                  updatedAt: option1.updatedAt.toISOString(),
+                },
+                {
+                  id: option2.id,
+                  name: option2.name,
+                  displayName: option2.displayName,
+                  basePrice: option2.basePrice,
+                  isActive: option2.isActive,
+                  createdAt: option2.createdAt.toISOString(),
+                  updatedAt: option2.updatedAt.toISOString(),
+                },
+              ],
               createdAt: optionGroup.createdAt.toISOString(),
               updatedAt: optionGroup.updatedAt.toISOString(),
             },
@@ -257,28 +257,67 @@ describe('ProductsService', () => {
           {
             id: optionGroup.id,
             name: optionGroup.name,
-            displayName: 'Wheels',
+            displayName: optionGroup.displayName,
+            options: [
+              {
+                id: option1.id,
+                name: option1.name,
+                displayName: option1.displayName,
+                basePrice: option1.basePrice,
+                isActive: option1.isActive,
+                createdAt: option1.createdAt.toISOString(),
+                updatedAt: option1.updatedAt.toISOString(),
+              },
+              {
+                id: option2.id,
+                name: option2.name,
+                displayName: option2.displayName,
+                basePrice: option2.basePrice,
+                isActive: option2.isActive,
+                createdAt: option2.createdAt.toISOString(),
+                updatedAt: option2.updatedAt.toISOString(),
+              },
+            ],
+            product: {
+              id: product.id,
+              name: product.name,
+              description: product.description,
+              basePrice: product.basePrice,
+              isActive: product.isActive,
+              createdAt: product.createdAt.toISOString(),
+              updatedAt: product.updatedAt.toISOString(),
+            },
             createdAt: optionGroup.createdAt.toISOString(),
             updatedAt: optionGroup.updatedAt.toISOString(),
           },
         ],
         rules: [
           {
-            id: 'rule-1',
-            ruleType: 'requires',
-            ifOptionId: 'option-1',
+            id: optionRule.id,
+            ruleType: optionRule.ruleType,
+            ifOptionId: option1.id,
             ifOption: {
-              id: 'option-1',
-              basePrice: null,
+              id: option1.id,
+              name: option1.name,
+              displayName: option1.displayName,
+              basePrice: option1.basePrice,
+              isActive: option1.isActive,
+              createdAt: option1.createdAt.toISOString(),
+              updatedAt: option1.updatedAt.toISOString(),
             },
-            thenOptionId: 'option-2',
+            thenOptionId: option2.id,
             thenOption: {
-              id: 'option-2',
-              basePrice: null,
+              id: option2.id,
+              name: option2.name,
+              displayName: option2.displayName,
+              basePrice: option2.basePrice,
+              isActive: option2.isActive,
+              createdAt: option2.createdAt.toISOString(),
+              updatedAt: option2.updatedAt.toISOString(),
             },
-            isActive: true,
-            createdAt: now.toISOString(),
-            updatedAt: now.toISOString(),
+            isActive: optionRule.isActive,
+            createdAt: optionRule.createdAt.toISOString(),
+            updatedAt: optionRule.updatedAt.toISOString(),
           },
         ],
       });
@@ -291,6 +330,8 @@ describe('ProductsService', () => {
     });
   });
 
+  describe('getByIdAndOptions()', () => {});
+
   describe('calculateProductPrice()', () => {
     it('should calculate total price with selected options', async () => {
       const productCategory = await createProductCategory(entityManager);
@@ -302,6 +343,11 @@ describe('ProductsService', () => {
         product,
       );
       const option1 = await createProductOption(entityManager, optionGroup1);
+      await createInventoryItem(entityManager, {
+        productOptionId: option1.id,
+        quantity: 10,
+        outOfStock: false,
+      });
 
       const optionsPrice = 12.99;
 

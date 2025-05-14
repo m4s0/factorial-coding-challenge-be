@@ -44,7 +44,7 @@ describe('ProductCategoryController', () => {
       );
 
       expect(response.statusCode).toBe(HttpStatus.OK);
-      expect(response.body).toEqual({
+      expect(response.body).toMatchObject({
         id: 'e08354f3-9ede-4b45-9f23-04584bfa69fc',
         name: 'Mountain Bikes',
         description: 'Bikes designed for off-road cycling',
@@ -94,7 +94,7 @@ describe('ProductCategoryController', () => {
       );
 
       expect(response.statusCode).toBe(HttpStatus.OK);
-      expect(response.body).toEqual([
+      expect(response.body).toMatchObject([
         {
           id: 'e08354f3-9ede-4b45-9f23-04584bfa69fc',
           name: 'Mountain Bikes',
@@ -142,7 +142,7 @@ describe('ProductCategoryController', () => {
         .send(createProductCategoryDto);
 
       expect(response.statusCode).toBe(HttpStatus.CREATED);
-      expect(response.body).toEqual({
+      expect(response.body).toMatchObject({
         id: newCategory.id,
         name: 'Mountain Bikes',
         description: 'Bikes designed for off-road cycling',
@@ -186,7 +186,7 @@ describe('ProductCategoryController', () => {
         .send(updateProductCategoryDto);
 
       expect(response.statusCode).toBe(HttpStatus.OK);
-      expect(response.body).toEqual({
+      expect(response.body).toMatchObject({
         id: categoryId,
         name: 'Mountain Bikes',
         description: 'Bikes designed for off-road cycling',

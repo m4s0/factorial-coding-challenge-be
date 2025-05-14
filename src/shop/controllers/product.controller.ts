@@ -17,8 +17,6 @@ import { ProductConfigurationQueryDto } from '@Shop/dtos/product-configuration-q
 import { InventoryService } from '@Shop/services/inventory.service';
 import { Roles } from '@Auth/decorators/roles.decorator';
 import { UserRole } from '@User/entities/user-role';
-import { ValidateConfigurationOutput } from '@Shop/types/validate-configuration.output';
-import { CalculatePriceOutput } from '@Shop/types/calculate-price.output';
 import { OptionRulesService } from '@Shop/services/option-rules.service';
 import { CreateProductDto } from '../dtos/create-product-dto';
 import { ProductsService } from '../services/products.service';
@@ -34,10 +32,8 @@ export class ProductController {
 
   @Public()
   @Get()
-  async getAll(
-    @Query('categoryName') categoryName: string,
-  ): Promise<ProductOutput[]> {
-    const products = await this.productsService.getAll(categoryName);
+  async getAll(): Promise<ProductOutput[]> {
+    const products = await this.productsService.getAll();
 
     return products.map((product) => transformProduct(product));
   }
@@ -50,7 +46,7 @@ export class ProductController {
     const product = await this.productsService.getById(productId);
 
     const optionInventory =
-      await this.inventoryService.getInventoryStatusForProduct(productId);
+      await this.inventoryService.getInventoryByProduct(productId);
 
     return transformProduct(product, optionInventory);
   }
@@ -67,45 +63,33 @@ export class ProductController {
     );
 
     const optionInventory =
-      await this.inventoryService.getInventoryStatusForProduct(productId);
+      await this.inventoryService.getInventoryByProduct(productId);
 
-    return transformProduct(product, optionInventory);
+    const price = await this.productsService.calculateProductPrice(
+      productId,
+      query.optionIds,
+    );
+
+    const isValidConfiguration =
+      await this.optionRulesService.validateConfiguration(
+        productId,
+        query.optionIds,
+      );
+
+    return transformProduct(
+      product,
+      optionInventory,
+      isValidConfiguration,
+      price,
+    );
   }
 
   @Public()
-  @Get(':productId/configure')
+  @Get(':productId/configuration')
   getConfiguration(
     @Param('productId', ParseUUIDPipe) productId: string,
   ): Promise<ProductConfigurationOutput> {
     return this.productsService.getProductConfiguration(productId);
-  }
-
-  @Public()
-  @Get(':productId/validate')
-  async validateConfiguration(
-    @Param('productId', ParseUUIDPipe) productId: string,
-    @Query() query: ProductConfigurationQueryDto,
-  ): Promise<ValidateConfigurationOutput> {
-    return {
-      isValid: await this.optionRulesService.validateConfiguration(
-        productId,
-        query.optionIds,
-      ),
-    };
-  }
-
-  @Public()
-  @Get(':productId/price')
-  async calculatePrice(
-    @Param('productId', ParseUUIDPipe) productId: string,
-    @Query() query: ProductConfigurationQueryDto,
-  ): Promise<CalculatePriceOutput> {
-    return {
-      price: await this.productsService.calculateProductPrice(
-        productId,
-        query.optionIds,
-      ),
-    };
   }
 
   @Post()

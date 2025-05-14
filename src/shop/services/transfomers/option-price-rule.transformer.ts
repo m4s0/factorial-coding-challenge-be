@@ -7,10 +7,15 @@ export function transformOptionPriceRule(
 ): OptionPriceRuleOutput {
   return {
     id: optionPriceRule.id,
-    price: Number(optionPriceRule.price),
+    price: optionPriceRule.price,
     targetOptionId: optionPriceRule.targetOptionId,
-    targetOption: transformProductOption(optionPriceRule.targetOption),
+    ...(optionPriceRule.targetOption && {
+      targetOption: transformProductOption(optionPriceRule.targetOption),
+    }),
     dependentOptionId: optionPriceRule.dependentOptionId,
+    ...(optionPriceRule.dependentOption && {
+      dependentOption: transformProductOption(optionPriceRule.dependentOption),
+    }),
     isActive: optionPriceRule.isActive,
     createdAt: optionPriceRule.createdAt.toISOString(),
     updatedAt: optionPriceRule.updatedAt.toISOString(),

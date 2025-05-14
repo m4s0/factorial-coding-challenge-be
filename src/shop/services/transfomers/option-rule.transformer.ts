@@ -7,9 +7,13 @@ export function transformOptionRule(optionRule: OptionRule): OptionRuleOutput {
     id: optionRule.id,
     ruleType: optionRule.ruleType,
     ifOptionId: optionRule.ifOptionId,
-    ifOption: transformProductOption(optionRule.ifOption),
+    ...(optionRule.ifOption && {
+      ifOption: transformProductOption(optionRule.ifOption),
+    }),
     thenOptionId: optionRule.thenOptionId,
-    thenOption: transformProductOption(optionRule.thenOption),
+    ...(optionRule.thenOption && {
+      thenOption: transformProductOption(optionRule.thenOption),
+    }),
     isActive: optionRule.isActive,
     createdAt: optionRule.createdAt.toISOString(),
     updatedAt: optionRule.updatedAt.toISOString(),

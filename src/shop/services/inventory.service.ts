@@ -1,10 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectEntityManager } from '@nestjs/typeorm';
 import { EntityManager } from 'typeorm';
-import { InventoryStatusForProduct } from '@Shop/types/inventory-status-for-product';
-import { UpdateInventoryInput } from '@Shop/types/update-inventory.input';
+import { UpdateInventoryItemInput } from '@Shop/types/update-inventory-item.input';
 import { InventoryItemRepository } from '@Shop/repositories/inventory-item.repository';
-import { ProductOptionGroupsService } from '@Shop/services/product-option-groups.service';
+import { CreateInventoryItemInput } from '@Shop/types/create-inventory-item.input';
 import { InventoryItem } from '../entities/inventory-item.entity';
 
 @Injectable()
@@ -13,71 +12,51 @@ export class InventoryService {
     @InjectEntityManager()
     private readonly entityManager: EntityManager,
     private readonly inventoryRepository: InventoryItemRepository,
-    private readonly productOptionGroupsService: ProductOptionGroupsService,
   ) {}
 
-  async getInventoryStatusForProduct(
-    productId: string,
-  ): Promise<InventoryStatusForProduct[]> {
-    const optionGroups =
-      await this.productOptionGroupsService.findOptionGroupsByProductId(
-        productId,
-      );
-    const optionIds = optionGroups
-      .flatMap((group) => group.options)
-      .map((option) => option.id);
-
-    const inventoryItems =
-      await this.inventoryRepository.findByOptionIds(optionIds);
-
-    return optionIds.map((optionId) => {
-      const inventoryItem = inventoryItems.find(
-        (item) => item.productOptionId === optionId,
-      );
-
-      return {
-        productOptionId: optionId,
-        quantity: inventoryItem?.quantity || 0,
-        inStock: !inventoryItem?.outOfStock,
-      };
-    });
+  async getAll(): Promise<InventoryItem[]> {
+    return this.inventoryRepository.findAll();
   }
 
-  async updateInventory(
-    productOptionId: string,
-    input: UpdateInventoryInput,
-  ): Promise<InventoryItem> {
-    let inventoryItem =
-      await this.inventoryRepository.findOneByProductOptionId(productOptionId);
+  async getById(id: string): Promise<InventoryItem> {
+    const inventoryItem = await this.inventoryRepository.findOneById(id);
 
     if (!inventoryItem) {
-      inventoryItem = this.entityManager.create(InventoryItem, {
-        productOptionId,
-        quantity: input.quantity,
-        outOfStock: input.quantity <= 0,
-      });
-    } else {
-      inventoryItem.quantity = input.quantity;
-      inventoryItem.outOfStock =
-        input.outOfStock !== undefined ? input.outOfStock : input.quantity <= 0;
+      throw new NotFoundException(`InventoryItem with ID ${id} not found`);
     }
 
-    return this.entityManager.save(inventoryItem);
+    return inventoryItem;
   }
 
-  async checkInventoryAvailability(
-    productOptionIds: string[],
-  ): Promise<boolean> {
-    const inventoryItems =
-      await this.inventoryRepository.findByOptionIds(productOptionIds);
+  async create(input: CreateInventoryItemInput): Promise<InventoryItem> {
+    const optionRule = this.entityManager.create(InventoryItem, input);
 
-    const hasOutOfStock = productOptionIds.some((productOptionId) => {
-      const inventoryItem = inventoryItems.find(
-        (item) => item.productOptionId === productOptionId,
-      );
-      return !inventoryItem || inventoryItem.outOfStock;
-    });
+    return this.entityManager.save(optionRule);
+  }
 
-    return !hasOutOfStock;
+  async update(
+    id: string,
+    input: UpdateInventoryItemInput,
+  ): Promise<InventoryItem> {
+    const existingInventoryItem = await this.getById(id);
+
+    this.entityManager.merge(InventoryItem, existingInventoryItem, input);
+    return this.entityManager.save(existingInventoryItem);
+  }
+
+  async remove(id: string): Promise<void> {
+    const existingInventoryItem = await this.getById(id);
+
+    await this.entityManager.remove(existingInventoryItem);
+  }
+
+  async getInventoryByProduct(id: string): Promise<InventoryItem> {
+    const inventoryItem = await this.inventoryRepository.findOneByProductId(id);
+
+    if (!inventoryItem) {
+      throw new NotFoundException(`InventoryItem with ID ${id} not found`);
+    }
+
+    return inventoryItem;
   }
 }

@@ -91,7 +91,7 @@ export class CartService {
       await this.entityManager.save(existingItem);
     } else {
       const validOptions =
-        await this.productOptionRepository.findOptionsByIds(optionIds);
+        await this.productOptionRepository.findAllByIds(optionIds);
 
       const newItem = this.entityManager.create(CartItem, {
         cartId: cart.id,

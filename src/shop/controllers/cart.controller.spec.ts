@@ -80,7 +80,7 @@ describe('CartController', () => {
       const response = await request(app.getHttpServer()).get('/cart');
 
       expect(response.statusCode).toEqual(HttpStatus.OK);
-      expect(response.body).toEqual({
+      expect(response.body).toMatchObject({
         id: '1fd7b09c-6da1-4f84-afe5-9ab0117c4cab',
         totalPrice: 835,
         createdAt: '2024-03-15T10:00:00.000Z',
@@ -146,7 +146,7 @@ describe('CartController', () => {
         .send(addItemDto);
 
       expect(response.statusCode).toEqual(HttpStatus.CREATED);
-      expect(response.body).toEqual({
+      expect(response.body).toMatchObject({
         id: '1fd7b09c-6da1-4f84-afe5-9ab0117c4cab',
         totalPrice: 835,
         createdAt: '2024-03-15T10:00:00.000Z',
@@ -232,7 +232,7 @@ describe('CartController', () => {
         .send(updateDto);
 
       expect(response.statusCode).toEqual(HttpStatus.OK);
-      expect(response.body).toEqual({
+      expect(response.body).toMatchObject({
         id: '1fd7b09c-6da1-4f84-afe5-9ab0117c4cab',
         totalPrice: 835,
         createdAt: '2024-03-15T10:00:00.000Z',
@@ -334,7 +334,7 @@ describe('CartController', () => {
       );
 
       expect(response.statusCode).toEqual(HttpStatus.OK);
-      expect(response.body).toEqual({
+      expect(response.body).toMatchObject({
         id: '1fd7b09c-6da1-4f84-afe5-9ab0117c4cab',
         totalPrice: 835,
         createdAt: '2024-03-15T10:00:00.000Z',

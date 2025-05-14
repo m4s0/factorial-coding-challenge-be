@@ -1,55 +1,40 @@
 import { ProductOptionOutput } from '@Shop/types/product-option.output';
 import { ProductOption } from '@Shop/entities/product-option.entity';
 import { transformInventoryItem } from '@Shop/services/transfomers/inventory-item.transformer';
-import { transformOptionRule } from '@Shop/services/transfomers/option-rule.transformer';
-import { transformOptionPriceRule } from '@Shop/services/transfomers/option-price-rule.transformer';
-import { transformProductOptionGroup } from '@Shop/services/transfomers/product-option-group.transformer';
-import { InventoryStatusForProduct } from '@Shop/types/inventory-status-for-product';
+import { ProductOptionGroup } from '@Shop/entities/product-option-group.entity';
+import { ProductOptionGroupOutput } from '@Shop/types/product-option-group.output';
+
+function transformProductOptionGroup(
+  productOptionGroup: ProductOptionGroup,
+): ProductOptionGroupOutput {
+  return {
+    id: productOptionGroup.id,
+    name: productOptionGroup.name,
+    displayName: productOptionGroup.displayName,
+    createdAt: productOptionGroup.createdAt.toISOString(),
+    updatedAt: productOptionGroup.updatedAt.toISOString(),
+  };
+}
 
 export function transformProductOption(
-  option: ProductOption,
-  optionInventory?: InventoryStatusForProduct[],
+  productOption: ProductOption,
 ): ProductOptionOutput {
   return {
-    id: option.id,
-    name: option.name,
-    displayName: option.displayName,
-    basePrice: option.basePrice ? option.basePrice : null,
-    isActive: option.isActive,
-    optionGroupId: option.optionGroupId,
-    ...(option.optionGroup && {
-      optionGroup: transformProductOptionGroup(option.optionGroup),
+    id: productOption.id,
+    name: productOption.name,
+    displayName: productOption.displayName,
+    basePrice: Number(Number(productOption.basePrice).toFixed(2)),
+    ...(productOption.inventoryItem && {
+      inventoryItem: transformInventoryItem(productOption.inventoryItem),
     }),
-    ...(option.inventoryItems && {
-      inventoryItems: option.inventoryItems.map((item) =>
-        transformInventoryItem(item),
-      ),
+    ...(productOption.optionGroup && {
+      optionGroup: transformProductOptionGroup(productOption.optionGroup),
     }),
-    ...(option.rulesAsCondition && {
-      rulesAsCondition: option.rulesAsCondition.map((rule) =>
-        transformOptionRule(rule),
-      ),
+    ...(productOption.optionGroupId && {
+      optionGroupId: productOption.optionGroupId,
     }),
-    ...(option.rulesAsResult && {
-      rulesAsResult: option.rulesAsResult.map((rule) =>
-        transformOptionRule(rule),
-      ),
-    }),
-    ...(option.priceRules && {
-      priceRules: option.priceRules.map((rule) =>
-        transformOptionPriceRule(rule),
-      ),
-    }),
-    ...(option.createdAt && {
-      createdAt: option.createdAt.toISOString(),
-    }),
-    ...(option.updatedAt && {
-      updatedAt: option.updatedAt.toISOString(),
-    }),
-    ...(optionInventory && {
-      inStock:
-        optionInventory.find((inv) => inv.productOptionId === option.id)
-          ?.inStock || false,
-    }),
+    isActive: productOption.isActive,
+    createdAt: productOption.createdAt.toISOString(),
+    updatedAt: productOption.updatedAt.toISOString(),
   };
 }

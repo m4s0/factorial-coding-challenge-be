@@ -11,6 +11,7 @@ import { createProduct } from '../../../test/helpers/create-product';
 import { createProductOptionGroup } from '../../../test/helpers/create-product-option-group';
 import { createProductOption } from '../../../test/helpers/create-product-option';
 import { createCart } from '../../../test/helpers/create-cart';
+import { createInventoryItem } from '../../../test/helpers/create-inventory-item';
 
 describe('CartService', () => {
   let app: INestApplication;
@@ -40,6 +41,11 @@ describe('CartService', () => {
         product,
       );
       const option = await createProductOption(entityManager, optionGroup);
+      await createInventoryItem(entityManager, {
+        productOptionId: option.id,
+        quantity: 10,
+        outOfStock: false,
+      });
 
       const cart = await createCart(entityManager, user);
       const cartItem = await createCartItem(entityManager, cart, product);
@@ -128,6 +134,11 @@ describe('CartService', () => {
         product,
       );
       const option = await createProductOption(entityManager, optionGroup);
+      await createInventoryItem(entityManager, {
+        productOptionId: option.id,
+        quantity: 10,
+        outOfStock: false,
+      });
       const cart = await createCart(entityManager, user);
 
       const addToCartInput = {
@@ -197,6 +208,11 @@ describe('CartService', () => {
         product,
       );
       const option = await createProductOption(entityManager, optionGroup);
+      await createInventoryItem(entityManager, {
+        productOptionId: option.id,
+        quantity: 10,
+        outOfStock: false,
+      });
 
       const cart = await createCart(entityManager, user);
       const cartItem = await createCartItem(entityManager, cart, product);
@@ -241,6 +257,11 @@ describe('CartService', () => {
         product,
       );
       const option = await createProductOption(entityManager, optionGroup);
+      await createInventoryItem(entityManager, {
+        productOptionId: option.id,
+        quantity: 10,
+        outOfStock: false,
+      });
 
       const cart = await createCart(entityManager, user);
       const cartItem = await createCartItem(entityManager, cart, product);
@@ -274,6 +295,11 @@ describe('CartService', () => {
         product,
       );
       const option = await createProductOption(entityManager, optionGroup);
+      await createInventoryItem(entityManager, {
+        productOptionId: option.id,
+        quantity: 10,
+        outOfStock: false,
+      });
 
       const cart = await createCart(entityManager, user);
       const cartItem = await createCartItem(entityManager, cart, product);

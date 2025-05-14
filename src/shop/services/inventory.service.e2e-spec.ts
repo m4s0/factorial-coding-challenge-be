@@ -1,5 +1,7 @@
 import { EntityManager } from 'typeorm';
-import { INestApplication } from '@nestjs/common';
+import { INestApplication, NotFoundException } from '@nestjs/common';
+import { createUUID } from '@Common/utils/create-uuid';
+import { InventoryItem } from '@Shop/entities/inventory-item.entity';
 import { InventoryService } from './inventory.service';
 import { createTestApp } from '../../../test/create-test.app';
 import { createProduct } from '../../../test/helpers/create-product';
@@ -24,7 +26,68 @@ describe('InventoryService', () => {
     await app.close();
   });
 
-  describe('getInventoryStatusForProduct()', () => {
+  describe('getAll()', () => {
+    it('should return all option InventoryItems', async () => {
+      const productCategory = await createProductCategory(entityManager);
+      const product = await createProduct(entityManager, {
+        categoryId: productCategory.id,
+      });
+      const optionGroup = await createProductOptionGroup(
+        entityManager,
+        product,
+      );
+      const option1 = await createProductOption(entityManager, optionGroup);
+      await createInventoryItem(entityManager, {
+        productOptionId: option1.id,
+        quantity: 10,
+        outOfStock: false,
+      });
+      const option2 = await createProductOption(entityManager, optionGroup);
+      await createInventoryItem(entityManager, {
+        productOptionId: option2.id,
+        quantity: 10,
+        outOfStock: false,
+      });
+
+      const inventoryItems = await inventoryService.getAll();
+
+      expect(inventoryItems[0]).toMatchObject({});
+    });
+  });
+
+  describe('getById()', () => {
+    it('should return InventoryItem by id', async () => {
+      const productCategory = await createProductCategory(entityManager);
+      const product = await createProduct(entityManager, {
+        categoryId: productCategory.id,
+      });
+      const optionGroup = await createProductOptionGroup(
+        entityManager,
+        product,
+      );
+      const option1 = await createProductOption(entityManager, optionGroup);
+      const inventoryItem = await createInventoryItem(entityManager, {
+        productOptionId: option1.id,
+        quantity: 10,
+        outOfStock: false,
+      });
+
+      const foundRule = await inventoryService.getById(inventoryItem.id);
+
+      expect(foundRule).toMatchObject({});
+    });
+
+    it('should return an error when InventoryItem does not exist', async () => {
+      const nonExistentId = createUUID();
+      await expect(inventoryService.getById(nonExistentId)).rejects.toThrow(
+        new NotFoundException(
+          `InventoryItem with ID ${nonExistentId} not found`,
+        ),
+      );
+    });
+  });
+
+  describe('getInventoryByProduct()', () => {
     it('should get inventory status for all product options', async () => {
       const productCategory = await createProductCategory(entityManager);
       const product = await createProduct(entityManager, {
@@ -45,14 +108,12 @@ describe('InventoryService', () => {
         outOfStock: false,
       });
 
-      const result = await inventoryService.getInventoryStatusForProduct(
-        product.id,
-      );
+      const result = await inventoryService.getInventoryByProduct(product.id);
 
-      expect(result[0]).toMatchObject({
+      expect(result).toMatchObject({
         productOptionId: productOption.id,
         quantity: inventoryItem.quantity,
-        inStock: true,
+        outOfStock: false,
       });
     });
 
@@ -70,20 +131,48 @@ describe('InventoryService', () => {
         entityManager,
         optionGroup,
       );
-
-      const result = await inventoryService.getInventoryStatusForProduct(
-        product.id,
-      );
-
-      expect(result[0]).toMatchObject({
+      const inventoryItem = await createInventoryItem(entityManager, {
         productOptionId: productOption.id,
-        quantity: 0,
-        inStock: true,
+        quantity: 10,
+        outOfStock: false,
+      });
+
+      const result = await inventoryService.getInventoryByProduct(product.id);
+
+      expect(result).toMatchObject({
+        productOptionId: productOption.id,
+        quantity: inventoryItem.quantity,
+        outOfStock: false,
       });
     });
   });
 
-  describe('updateInventory()', () => {
+  describe('create()', () => {
+    it('should create a new option InventoryItem', async () => {
+      const productCategory = await createProductCategory(entityManager);
+      const product = await createProduct(entityManager, {
+        categoryId: productCategory.id,
+      });
+      const optionGroup = await createProductOptionGroup(
+        entityManager,
+        product,
+      );
+      const productOption1 = await createProductOption(
+        entityManager,
+        optionGroup,
+      );
+
+      const inventoryItem = await inventoryService.create({
+        productOptionId: productOption1.id,
+        quantity: 10,
+        outOfStock: true,
+      });
+
+      expect(inventoryItem).toMatchObject({});
+    });
+  });
+
+  describe('update()', () => {
     it('should create new inventory item if it does not exist', async () => {
       const productCategory = await createProductCategory(entityManager);
       const product = await createProduct(entityManager, {
@@ -97,14 +186,19 @@ describe('InventoryService', () => {
         entityManager,
         optionGroup,
       );
+      const inventoryItem = await createInventoryItem(entityManager, {
+        productOptionId: productOption.id,
+        quantity: 10,
+        outOfStock: false,
+      });
 
       const updateInput = {
         quantity: 5,
         outOfStock: false,
       };
 
-      const result = await inventoryService.updateInventory(
-        productOption.id,
+      const result = await inventoryService.update(
+        inventoryItem.id,
         updateInput,
       );
 
@@ -128,7 +222,7 @@ describe('InventoryService', () => {
         entityManager,
         optionGroup,
       );
-      await createInventoryItem(entityManager, {
+      const inventoryItem = await createInventoryItem(entityManager, {
         productOptionId: productOption.id,
         quantity: 10,
         outOfStock: false,
@@ -139,8 +233,8 @@ describe('InventoryService', () => {
         outOfStock: true,
       };
 
-      const result = await inventoryService.updateInventory(
-        productOption.id,
+      const result = await inventoryService.update(
+        inventoryItem.id,
         updateInput,
       );
 
@@ -152,8 +246,8 @@ describe('InventoryService', () => {
     });
   });
 
-  describe('checkInventoryAvailability()', () => {
-    it('should return true when all options are in stock', async () => {
+  describe('remove()', () => {
+    it('should remove an existing InventoryItem', async () => {
       const productCategory = await createProductCategory(entityManager);
       const product = await createProduct(entityManager, {
         categoryId: productCategory.id,
@@ -162,90 +256,29 @@ describe('InventoryService', () => {
         entityManager,
         product,
       );
-      const productOption1 = await createProductOption(
-        entityManager,
-        optionGroup,
-      );
-      const productOption2 = await createProductOption(
-        entityManager,
-        optionGroup,
-      );
-
+      const option1 = await createProductOption(entityManager, optionGroup);
       await createInventoryItem(entityManager, {
-        productOptionId: productOption1.id,
-        quantity: 5,
+        productOptionId: option1.id,
+        quantity: 10,
         outOfStock: false,
       });
-      await createInventoryItem(entityManager, {
-        productOptionId: productOption2.id,
-        quantity: 3,
+      const option2 = await createProductOption(entityManager, optionGroup);
+      const inventoryItem = await createInventoryItem(entityManager, {
+        productOptionId: option2.id,
+        quantity: 10,
         outOfStock: false,
       });
 
-      const result = await inventoryService.checkInventoryAvailability([
-        productOption1.id,
-        productOption2.id,
-      ]);
+      await inventoryService.remove(inventoryItem.id);
 
-      expect(result).toBe(true);
+      const result = await entityManager.findOne(InventoryItem, {
+        where: { id: inventoryItem.id },
+      });
+      expect(result).toBeNull();
     });
 
-    it('should return false when any option is out of stock', async () => {
-      const productCategory = await createProductCategory(entityManager);
-      const product = await createProduct(entityManager, {
-        categoryId: productCategory.id,
-      });
-      const optionGroup = await createProductOptionGroup(
-        entityManager,
-        product,
-      );
-      const productOption1 = await createProductOption(
-        entityManager,
-        optionGroup,
-      );
-      const productOption2 = await createProductOption(
-        entityManager,
-        optionGroup,
-      );
-
-      await createInventoryItem(entityManager, {
-        productOptionId: productOption1.id,
-        quantity: 5,
-        outOfStock: false,
-      });
-      await createInventoryItem(entityManager, {
-        productOptionId: productOption2.id,
-        quantity: 0,
-        outOfStock: true,
-      });
-
-      const result = await inventoryService.checkInventoryAvailability([
-        productOption1.id,
-        productOption2.id,
-      ]);
-
-      expect(result).toBe(false);
-    });
-
-    it('should return false when inventory item does not exist', async () => {
-      const productCategory = await createProductCategory(entityManager);
-      const product = await createProduct(entityManager, {
-        categoryId: productCategory.id,
-      });
-      const optionGroup = await createProductOptionGroup(
-        entityManager,
-        product,
-      );
-      const productOption = await createProductOption(
-        entityManager,
-        optionGroup,
-      );
-
-      const result = await inventoryService.checkInventoryAvailability([
-        productOption.id,
-      ]);
-
-      expect(result).toBe(false);
+    it('should get an error if InventoryItem does not exist', async () => {
+      await expect(inventoryService.remove(createUUID())).rejects.toThrow();
     });
   });
 });

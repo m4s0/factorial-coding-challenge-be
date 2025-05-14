@@ -2,6 +2,9 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProductCategoryController } from '@Shop/controllers/product-category.controller';
 import { ProductCategoriesService } from '@Shop/services/product-categories.service';
+import { OptionRulesController } from '@Shop/controllers/option-rule.controller';
+import { OptionPriceRulesController } from '@Shop/controllers/option-price-rule.controller';
+import { OptionPriceRulesService } from '@Shop/services/option-price-rules.service';
 import { ProductOptionGroupController } from './controllers/product-option-group.controller';
 import { CartController } from './controllers/cart.controller';
 import { ProductOptionGroupsService } from './services/product-option-groups.service';
@@ -52,6 +55,8 @@ import { ProductOption } from './entities/product-option.entity';
   controllers: [
     CartController,
     InventoryController,
+    OptionRulesController,
+    OptionPriceRulesController,
     ProductCategoryController,
     ProductController,
     ProductOptionController,
@@ -70,6 +75,7 @@ import { ProductOption } from './entities/product-option.entity';
     CartService,
     InventoryService,
     OptionRulesService,
+    OptionPriceRulesService,
     PricingService,
     ProductCategoriesService,
     ProductsService,

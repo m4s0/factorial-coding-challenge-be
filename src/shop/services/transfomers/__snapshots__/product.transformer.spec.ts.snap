@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`transformProduct should transform a complete product with category and option groups 1`] = `
+exports[`transformProduct should transform product correctly 1`] = `
 {
   "basePrice": 99.99,
   "category": {
@@ -23,17 +23,28 @@ exports[`transformProduct should transform a complete product with category and 
       "displayName": "Test Option Group",
       "id": "a1b2c3d4-e5f6-7g8h-9i0j-k1l2m3n4o5p6",
       "name": "Test Option Group",
-      "options": [],
-      "product": {
-        "basePrice": 99.99,
-        "categoryId": undefined,
-        "createdAt": "2024-01-01T00:00:00.000Z",
-        "description": "Test Description",
-        "id": "d17fac76-f22a-43cb-9336-b91b3e0c2aca",
-        "isActive": true,
-        "name": "Test Product",
-        "updatedAt": "2024-01-01T00:00:00.000Z",
-      },
+      "options": [
+        {
+          "basePrice": 6,
+          "createdAt": "2024-01-01T00:00:00.000Z",
+          "displayName": "Large",
+          "id": "7ba7b5bd-2390-43d6-9893-e959068a1116",
+          "inventoryItem": {
+            "createdAt": "2024-01-01T00:00:00.000Z",
+            "id": "755cf8ae-950c-4be2-9a20-1fb6576b745e",
+            "outOfStock": false,
+            "productOptionId": "13585532-a295-4a82-b7bf-0abc07064ee9",
+            "quantity": 100,
+            "updatedAt": "2024-01-02T00:00:00.000Z",
+          },
+          "isActive": true,
+          "name": "Option-095c5e80-bee8-4695-8ed2-bc40fed5f3ca",
+          "priceRules": [],
+          "rulesAsCondition": [],
+          "rulesAsResult": [],
+          "updatedAt": "2024-01-02T00:00:00.000Z",
+        },
+      ],
       "updatedAt": "2024-01-01T00:00:00.000Z",
     },
   ],

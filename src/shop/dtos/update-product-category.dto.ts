@@ -14,7 +14,7 @@ export const updateProductCategorySchema = z.object({
     .max(500, 'Description must be at most 500 characters')
     .optional(),
 
-  isActive: z.boolean().default(true).optional().optional(),
+  isActive: z.boolean().default(true).optional(),
 });
 
 export class UpdateProductCategoryDto extends createZodDto(

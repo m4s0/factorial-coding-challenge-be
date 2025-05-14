@@ -8,6 +8,7 @@ import { createProductOptionGroup } from '../../../test/helpers/create-product-o
 import { createProduct } from '../../../test/helpers/create-product';
 import { createOptionPriceRule } from '../../../test/helpers/create-option-price-rule';
 import { createProductCategory } from '../../../test/helpers/create-product-category';
+import { createInventoryItem } from '../../../test/helpers/create-inventory-item';
 
 describe('PricingService', () => {
   let app: INestApplication;
@@ -34,6 +35,11 @@ describe('PricingService', () => {
       const option = await createProductOption(entityManager, optionGroup, {
         basePrice: 10,
       });
+      await createInventoryItem(entityManager, {
+        productOptionId: option.id,
+        quantity: 10,
+        outOfStock: false,
+      });
 
       const totalPrice = await pricingService.calculateOptionsPrice([
         option.id,
@@ -54,9 +60,19 @@ describe('PricingService', () => {
         basePrice: 10,
         name: 'Option 1',
       });
+      await createInventoryItem(entityManager, {
+        productOptionId: option1.id,
+        quantity: 10,
+        outOfStock: false,
+      });
       const option2 = await createProductOption(entityManager, optionGroup, {
         basePrice: 20,
         name: 'Option 2',
+      });
+      await createInventoryItem(entityManager, {
+        productOptionId: option2.id,
+        quantity: 10,
+        outOfStock: false,
       });
 
       const totalPrice = await pricingService.calculateOptionsPrice([
@@ -92,15 +108,30 @@ describe('PricingService', () => {
         displayName: 'Full-suspension',
         basePrice: 130,
       });
+      await createInventoryItem(entityManager, {
+        productOptionId: option1.id,
+        quantity: 10,
+        outOfStock: false,
+      });
       const option2 = await createProductOption(entityManager, optionGroup1, {
         name: 'Diamond',
         displayName: 'Diamond',
         basePrice: 100,
       });
+      await createInventoryItem(entityManager, {
+        productOptionId: option2.id,
+        quantity: 10,
+        outOfStock: false,
+      });
       const option3 = await createProductOption(entityManager, optionGroup2, {
         name: 'Matte',
         displayName: 'Matte',
         basePrice: 40,
+      });
+      await createInventoryItem(entityManager, {
+        productOptionId: option3.id,
+        quantity: 10,
+        outOfStock: false,
       });
 
       await createOptionPriceRule(entityManager, option1, option3, {
@@ -141,6 +172,11 @@ describe('PricingService', () => {
         basePrice: 10,
         isActive: false,
       });
+      await createInventoryItem(entityManager, {
+        productOptionId: option.id,
+        quantity: 10,
+        outOfStock: false,
+      });
 
       const totalPrice = await pricingService.calculateOptionsPrice([
         option.id,
@@ -163,9 +199,19 @@ describe('PricingService', () => {
         basePrice: 10,
         name: 'Option 1',
       });
+      await createInventoryItem(entityManager, {
+        productOptionId: option1.id,
+        quantity: 10,
+        outOfStock: false,
+      });
       const option2 = await createProductOption(entityManager, optionGroup, {
         basePrice: 20,
         name: 'Option 2',
+      });
+      await createInventoryItem(entityManager, {
+        productOptionId: option2.id,
+        quantity: 10,
+        outOfStock: false,
       });
 
       const priceRule = await pricingService.createPriceRule(
@@ -192,6 +238,11 @@ describe('PricingService', () => {
       const option = await createProductOption(entityManager, optionGroup, {
         basePrice: 10,
       });
+      await createInventoryItem(entityManager, {
+        productOptionId: option.id,
+        quantity: 10,
+        outOfStock: false,
+      });
 
       await expect(
         pricingService.createPriceRule(option.id, option.id, 15),
@@ -211,6 +262,11 @@ describe('PricingService', () => {
       const option = await createProductOption(entityManager, optionGroup, {
         basePrice: 10,
       });
+      await createInventoryItem(entityManager, {
+        productOptionId: option.id,
+        quantity: 10,
+        outOfStock: false,
+      });
 
       await expect(
         pricingService.createPriceRule(option.id, nonExistentId, 15),
@@ -229,8 +285,18 @@ describe('PricingService', () => {
       const option1 = await createProductOption(entityManager, optionGroup, {
         basePrice: 10,
       });
+      await createInventoryItem(entityManager, {
+        productOptionId: option1.id,
+        quantity: 10,
+        outOfStock: false,
+      });
       const option2 = await createProductOption(entityManager, optionGroup, {
         basePrice: 20,
+      });
+      await createInventoryItem(entityManager, {
+        productOptionId: option2.id,
+        quantity: 10,
+        outOfStock: false,
       });
 
       await pricingService.createPriceRule(option1.id, option2.id, 25);
