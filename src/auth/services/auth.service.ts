@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '@User/services/users.service';
 import { User } from '@User/entities/user.entity';
-import { UserRepository } from '@User/repositories/user.repository';
 import { LogicException } from '@Common/exceptions/logic-exception';
 import { UserRole } from '@User/entities/user-role';
 import { RegisterInput } from '../types/register.input';
@@ -13,7 +12,6 @@ import { isPasswordsMatch } from '../utils/is-passwords-match';
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly userRepository: UserRepository,
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
   ) {}
@@ -21,7 +19,7 @@ export class AuthService {
   async login(input: LoginInput): Promise<AccessTokenOutput> {
     const { email, password } = input;
 
-    const user = await this.userRepository.findOneByEmail(email);
+    const user = await this.usersService.findOneByEmail(email);
     if (!user) {
       throw new LogicException(`User not found by email: ${email}`);
     }
@@ -55,7 +53,7 @@ export class AuthService {
   }
 
   async validateUser(email: string, password: string): Promise<User> {
-    const user = await this.userRepository.findOneByEmail(email);
+    const user = await this.usersService.findOneByEmail(email);
     if (!user) {
       throw new LogicException(`User not found by email: ${email}`);
     }

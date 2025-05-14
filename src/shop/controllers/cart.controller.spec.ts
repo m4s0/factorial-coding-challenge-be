@@ -7,7 +7,7 @@ import { createUUID } from '@Common/utils/create-uuid';
 import { Cart } from '@Shop/entities/cart.entity';
 import { Product } from '@Shop/entities/product.entity';
 import { CartItemOption } from '@Shop/entities/cart-item-option.entity';
-import { createMockUser } from '../../../test/mocks/guards/create-mock-user';
+import { createMockUser } from '../../../test/mocks/create-mock-user';
 import { createTestApp } from '../../../test/create-test.app';
 
 describe('CartController', () => {

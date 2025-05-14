@@ -5,7 +5,6 @@ import { JwtService } from '@nestjs/jwt';
 import { User } from '@User/entities/user.entity';
 import { LogicException } from '@Common/exceptions/logic-exception';
 import { createUUID } from '@Common/utils/create-uuid';
-import { UserRepository } from '@User/repositories/user.repository';
 import { UsersService } from '@User/services/users.service';
 import { hashPassword } from '@Auth/utils/hash-password';
 import { RegisterInput } from '../types/register.input';
@@ -18,7 +17,6 @@ describe('AuthService', () => {
   let jwtService: JwtService;
   let authService: AuthService;
   let usersService: UsersService;
-  let userRepository: UserRepository;
 
   beforeEach(async () => {
     app = await createTestApp();
@@ -27,7 +25,6 @@ describe('AuthService', () => {
     jwtService = app.get<JwtService>(JwtService);
     authService = app.get<AuthService>(AuthService);
     usersService = app.get<UsersService>(UsersService);
-    userRepository = app.get<UserRepository>(UserRepository);
   });
 
   afterEach(async () => {
@@ -109,7 +106,7 @@ describe('AuthService', () => {
 
       await authService.register(registerInput);
 
-      const user = await userRepository.findOneByEmail(registerInput.email);
+      const user = await usersService.findOneByEmail(registerInput.email);
       expect(user).toMatchObject({
         id: expect.any(String),
         email,
