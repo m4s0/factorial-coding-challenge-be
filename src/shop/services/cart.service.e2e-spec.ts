@@ -62,14 +62,15 @@ describe('CartService', () => {
         userId: user.id,
         createdAt: cart.createdAt,
         updatedAt: cart.updatedAt,
+        totalPrice: cart.totalPrice.toFixed(2),
         items: [
           {
             id: cartItem.id,
             cartId: cart.id,
             productId: product.id,
-            quantity: 1,
-            price: 83.98,
-            totalPrice: 83.98,
+            quantity: cartItem.quantity,
+            price: cartItem.price.toFixed(2),
+            totalPrice: cartItem.totalPrice.toFixed(2),
             createdAt: cartItem.createdAt,
             updatedAt: cartItem.updatedAt,
             product: {
@@ -103,7 +104,6 @@ describe('CartService', () => {
             ],
           },
         ],
-        totalPrice: 83.98,
       });
     });
 
@@ -153,7 +153,6 @@ describe('CartService', () => {
         id: cart.id,
         userId: user.id,
         createdAt: cart.createdAt,
-        updatedAt: cart.updatedAt,
         totalPrice: 167.96,
         items: [
           {
@@ -161,8 +160,20 @@ describe('CartService', () => {
             cartId: cart.id,
             productId: product.id,
             quantity: 2,
+            createdAt: expect.any(Date),
+            updatedAt: expect.any(Date),
             price: 83.98,
             totalPrice: 167.96,
+            product: {
+              id: product.id,
+              name: product.name,
+              description: product.description,
+              basePrice: product.basePrice.toString(),
+              isActive: product.isActive,
+              categoryId: product.categoryId,
+              createdAt: product.createdAt,
+              updatedAt: product.updatedAt,
+            },
             itemOptions: [
               {
                 id: expect.any(String),
@@ -170,13 +181,24 @@ describe('CartService', () => {
                 optionId: option.id,
                 createdAt: expect.any(Date),
                 updatedAt: expect.any(Date),
+                option: {
+                  id: option.id,
+                  name: option.name,
+                  displayName: option.displayName,
+                  basePrice: option.basePrice.toString(),
+                  isActive: option.isActive,
+                  optionGroupId: optionGroup.id,
+                  createdAt: option.createdAt,
+                  updatedAt: option.updatedAt,
+                },
               },
             ],
-            createdAt: expect.any(Date),
-            updatedAt: expect.any(Date),
           },
         ],
       });
+      expect(result.updatedAt.getTime()).toBeGreaterThan(
+        cart.updatedAt.getTime(),
+      );
     });
 
     it('should throw NotFoundException for non-existent product', async () => {

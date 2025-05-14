@@ -38,4 +38,7 @@ export class CartItemOption {
 
   @UpdateDateColumn()
   declare updatedAt: Date;
+
+  @Column({ type: 'decimal', precision: 10, scale: 2 })
+  declare price: number;
 }

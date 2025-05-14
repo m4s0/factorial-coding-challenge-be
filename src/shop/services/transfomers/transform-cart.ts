@@ -4,15 +4,15 @@ import { CartOutput } from '@Shop/types/cart.output';
 export function transformCart(cart: Cart): CartOutput {
   return {
     id: cart.id,
-    totalPrice: Number(cart.totalPrice?.toFixed(2) ?? 0),
+    totalPrice: cart.totalPrice,
     createdAt: cart.createdAt.toISOString(),
     updatedAt: cart.updatedAt.toISOString(),
     items: cart.items.map((item) => ({
       id: item.id,
       productId: item.productId,
       quantity: item.quantity,
-      price: Number(item.price?.toFixed(2) ?? 0),
-      totalPrice: Number(item.totalPrice?.toFixed(2) ?? 0),
+      price: item.price,
+      totalPrice: item.totalPrice,
       createdAt: item.createdAt.toISOString(),
       updatedAt: item.updatedAt.toISOString(),
       product: {
@@ -33,7 +33,7 @@ export function transformCart(cart: Cart): CartOutput {
           id: itemOption.option.id,
           name: itemOption.option.name,
           displayName: itemOption.option.displayName,
-          price: itemOption.option.basePrice,
+          price: itemOption.price,
           optionGroupId: itemOption.option.optionGroupId,
           createdAt: itemOption.option.createdAt.toISOString(),
           updatedAt: itemOption.option.updatedAt.toISOString(),

@@ -35,7 +35,10 @@ export class CartService {
     const cart = await this.cartRepository.findByUserId(user.id);
 
     if (!cart) {
-      const newCart = this.entityManager.create(Cart, { userId: user.id });
+      const newCart = this.entityManager.create(Cart, {
+        userId: user.id,
+        totalPrice: 0,
+      });
       await this.entityManager.save(newCart);
 
       newCart.totalPrice = 0;
@@ -43,7 +46,7 @@ export class CartService {
       return newCart;
     }
 
-    return this.calculateCartPrice(cart);
+    return cart;
   }
 
   async addItem(user: User, input: AddToCartInput): Promise<Cart> {
@@ -52,7 +55,10 @@ export class CartService {
     let cart = await this.cartRepository.findByUserId(user.id);
 
     if (!cart) {
-      cart = this.entityManager.create(Cart, { userId: user.id });
+      cart = this.entityManager.create(Cart, {
+        userId: user.id,
+        totalPrice: 0,
+      });
       await this.entityManager.save(cart);
 
       cart.totalPrice = 0;
@@ -97,6 +103,8 @@ export class CartService {
         cartId: cart.id,
         productId,
         quantity,
+        price: 0,
+        totalPrice: 0,
         itemOptions: [],
       });
       await this.entityManager.save(newItem);
@@ -105,6 +113,7 @@ export class CartService {
         const cartItemOption = this.entityManager.create(CartItemOption, {
           cartItemId: newItem.id,
           optionId: option.id,
+          price: 0,
         });
 
         await this.entityManager.save(cartItemOption);
@@ -171,33 +180,49 @@ export class CartService {
   }
 
   private async calculateCartPrice(cart: Cart): Promise<Cart> {
-    const cartWithCalculatedPrices = { ...cart, totalPrice: 0 };
+    let cartTotalPrice = 0;
+    let cartItemPrice = 0;
+    let cartItemTotalPrice = 0;
 
-    for (const item of cartWithCalculatedPrices.items) {
+    for (const cartItem of cart.items) {
       const product = await this.productsService.getByIdAndOptions(
-        item.productId,
-        item.itemOptions.map((o) => o.optionId),
+        cartItem.productId,
+        cartItem.itemOptions.map((itemOption) => itemOption.optionId),
       );
 
       let productTotalPrice = Number(product.basePrice);
-      for (const itemOption of item.itemOptions) {
+      for (const cartItemOption of cartItem.itemOptions) {
         const option = product.optionGroups
           .flatMap((g) => g.options)
-          .find((o) => o.id === itemOption.optionId);
+          .find((o) => o.id === cartItemOption.optionId);
 
         if (option) {
-          itemOption.option = option;
+          cartItemOption.option = option;
           productTotalPrice += Number(option.basePrice);
+
+          this.entityManager.merge(CartItemOption, cartItemOption, {
+            price: option.basePrice,
+          });
+          await this.entityManager.save(cartItem);
         }
       }
 
-      const itemTotalPrice = productTotalPrice * item.quantity;
+      const itemTotalPrice = productTotalPrice * cartItem.quantity;
 
-      item.price = Number(productTotalPrice.toFixed(2));
-      item.totalPrice = Number(itemTotalPrice.toFixed(2));
-      cartWithCalculatedPrices.totalPrice += Number(itemTotalPrice.toFixed(2));
+      cartItemPrice = Number(productTotalPrice.toFixed(2));
+      cartItemTotalPrice = Number(itemTotalPrice.toFixed(2));
+      cartTotalPrice += Number(itemTotalPrice.toFixed(2));
+
+      this.entityManager.merge(CartItem, cartItem, {
+        price: cartItemPrice,
+        totalPrice: cartItemTotalPrice,
+      });
+      await this.entityManager.save(cartItem);
     }
 
-    return cartWithCalculatedPrices;
+    this.entityManager.merge(Cart, cart, {
+      totalPrice: cartTotalPrice,
+    });
+    return this.entityManager.save(cart);
   }
 }

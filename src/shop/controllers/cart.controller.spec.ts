@@ -48,6 +48,7 @@ describe('CartController', () => {
             createdAt: new Date('2024-03-15T10:00:00Z'),
             updatedAt: new Date('2024-03-15T10:00:00Z'),
             optionId: '195aa790-a520-444b-95c2-f6c5f4cf63b1',
+            price: 35.0,
             option: {
               id: '195aa790-a520-444b-95c2-f6c5f4cf63b1',
               name: 'matte',

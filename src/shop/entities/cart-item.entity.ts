@@ -53,7 +53,9 @@ export class CartItem {
   @UpdateDateColumn()
   declare updatedAt: Date;
 
-  declare price?: number;
+  @Column({ type: 'decimal', precision: 10, scale: 2 })
+  declare price: number;
 
-  declare totalPrice?: number;
+  @Column({ type: 'decimal', precision: 10, scale: 2 })
+  declare totalPrice: number;
 }

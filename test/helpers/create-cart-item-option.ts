@@ -16,7 +16,7 @@ export async function createCartItemOption(
     optionId: option.id,
     name: option.name,
     displayName: option.displayName,
-    basePrice: option.basePrice,
+    price: 0,
     ...override,
   });
 

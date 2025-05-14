@@ -9,6 +9,7 @@ export async function createCart(
 ): Promise<Cart> {
   const cart = entityManager.create(Cart, {
     user,
+    totalPrice: 0,
     ...override,
   });
 

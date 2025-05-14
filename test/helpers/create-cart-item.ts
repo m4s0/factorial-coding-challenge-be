@@ -15,6 +15,8 @@ export async function createCartItem(
     product,
     productId: product.id,
     quantity: 1,
+    price: 0,
+    totalPrice: 0,
     ...override,
   });
 
